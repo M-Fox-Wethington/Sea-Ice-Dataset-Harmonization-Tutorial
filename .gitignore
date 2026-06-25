@@ -38,3 +38,5 @@ desktop.ini
 # Re-include the bundled sample
 !data/sample/
 !data/sample/**
+
+**/*.quarto_ipynb

@@ -5,6 +5,7 @@ With a fitted transfer function in hand, harmonizing is simple: apply the model 
 ```{r}
 #| label: setup
 source(here::here("R", "setup.R"))
+suppressMessages(library(nnet))  # predict.nnet must be attached for deploy_model()
 paths <- sih_paths()
 amsr  <- load_sic_stack(paths$amsr_dir)
 nsidc <- align_products(amsr, load_sic_stack(paths$nsidc_dir))

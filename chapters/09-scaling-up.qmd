@@ -1,0 +1,46 @@
+# Scaling up and adapting the method {#sec-scaling}
+
+The bundled sample runs in minutes, but the real dataset is larger and you will want to apply the method to your own products and regions. This chapter covers both: running at full scale, and adapting the pipeline. It is mostly guidance rather than executed code, because the operations it describes need the full download.
+
+## Running at full scale
+
+The full pipeline is heavier than the sample in three specific places, and each has a standard remedy.
+
+The download is the first. The Sea Ice Index record is small even across four decades, but the AMSR granules are large because each holds the whole hemisphere in HDF5. Clip to your study area as you ingest (@sec-ingestion), which is what keeps the per-file footprint to kilobytes and the whole working set to something a laptop can hold.
+
+Training is the second. The sample produced roughly 1.8 million paired pixels from a single year; the full 2012-to-present overlap produces far more. You do not need all of them. The transfer function is a per-pixel value relationship, so a large random subsample of pairs estimates it as well as the full set, and `nnet` on millions of rows is slow. Take a representative subsample, and confirm it is large enough by checking that the held-out RMSE stops changing as you add more pairs. The hyperparameter search parallelizes cleanly, one model per core, which is how the paper ran it:
+
+```r
+library(foreach); library(doParallel)
+cl <- makeCluster(parallel::detectCores() - 1); registerDoParallel(cl)
+results <- foreach(i = seq_len(nrow(grid)), .combine = rbind, .packages = "nnet") %dopar% {
+  m <- nnet(amsr ~ nsidc, data = train, size = grid$size[i], decay = grid$decay[i],
+            maxit = 500, linout = TRUE, trace = FALSE)
+  data.frame(grid[i, ], rmse = rmse(test$amsr, pmin(pmax(predict(m, test), 0), 1)))
+}
+stopCluster(cl)
+```
+
+Deployment is the third. Applying the model across thousands of daily layers is memory-bound, not compute-bound, because the model itself is tiny. `terra::app()` streams the raster from disk rather than holding it in memory, so the main lever is to process the record in chunks, for example one year or one winter season at a time, writing each chunk to a GeoTIFF or NetCDF stack and reassembling at the end. The `writeCDF()` and per-year stack patterns in the FrostBound_AQ repository show one way to organize this.
+
+## Adapting to other products and regions
+
+Nothing in the method is specific to AMSR, the Sea Ice Index, or the Peninsula. To retarget it, change four things and leave the rest alone.
+
+Change the ingestion to match your products. Each passive-microwave product has its own subdataset or variable name, its own flag codes for land and missing data, and its own value scaling, and @sec-ingestion is where those live. The NASA Bootstrap product (NSIDC-0079) and the NOAA/NSIDC Climate Data Record are natural coarse alternatives to the Sea Ice Index, and the FrostBound_AQ repository carries a Bootstrap ingestion pipeline alongside the Sea Ice Index one.
+
+Change the target grid. We harmonized onto the 12.5 km AMSR grid in EPSG:3976. For the Arctic you would use a northern polar stereographic projection such as EPSG:3413; for a regional study you might pick a local equal-area grid. The fine product you are harmonizing toward defines the target.
+
+Change the study-area clip and the season. The clip is just the polygon you crop to. The austral winter definition of June through September is a Southern Hemisphere, Peninsula-specific choice; an Arctic study would use a different season, and a year-round analysis would drop the winter filter entirely.
+
+## What harmonization does and does not do
+
+It is worth being clear about the method's limits, because they bound how far you should trust the output. The transfer function is a per-pixel value correction: it learns how the coarse product's concentration values relate to the fine product's and rewrites the coarse record accordingly. It is not super-resolution. The spatial detail in the harmonized product beyond the coarse footprint comes from resampling the coarse field onto the fine grid, not from new information about sub-footprint structure, so the harmonized 12.5 km product is smoother within each original 25 km cell than a true 12.5 km observation would be.
+
+Two assumptions ride along with it. The transfer function is fit where the products overlap and then applied to years when only the coarse product exists, which assumes the sensor relationship is stable through time. It is also fit by pooling pixels across the domain, which assumes the relationship does not vary much in space. Both are reasonable for nearby passive-microwave products over a single region, and the overlap-period validation in @sec-validate is how you check them, but if the relationship drifts or varies spatially you would extend the model with predictors for season or location rather than a single input. The one-input network used here is the right starting point precisely because it is simple enough to validate honestly.
+
+The discipline that makes the method trustworthy is the validation. Always report the overlap-period error, the extent comparison, and the spatial differences before using the extended record, and treat a harmonized value in 1980 as a model-based estimate informed by the coarse observation, not as a direct measurement.
+
+## Where to go next
+
+The full research code behind this tutorial, including the population analysis it fed, is in the [FrostBound_AQ repository](https://github.com/M-Fox-Wethington/FrostBound_AQ), and the method and its application are described in @wethington2026meps. The data products are documented on their NSIDC pages for [AU_SI12](https://nsidc.org/data/au_si12/versions/1) and the [Sea Ice Index](https://nsidc.org/data/g02135).

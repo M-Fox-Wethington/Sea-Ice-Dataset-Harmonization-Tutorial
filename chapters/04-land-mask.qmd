@@ -35,8 +35,10 @@ That single-layer raster, land cells equal to 1 and everything else `NA`, is the
 #| fig-cap: "The derived land mask over the western Antarctic Peninsula. Land and coastline cells (grey) come from the Sea Ice Index flag codes; ocean is left blank."
 #| fig-width: 5
 #| fig-height: 5
-ggplot(rast_to_df(land, "land"), aes(x, y, fill = land)) +
-  geom_raster(fill = COLORS$coastline) +
+land_df <- subset(rast_to_df(land, "land"), !is.na(land))
+ggplot(land_df, aes(x, y)) +
+  geom_tile(fill = COLORS$coastline,
+            width = terra::res(land)[1], height = terra::res(land)[2]) +
   coord_equal() +
   labs(title = "Land mask", x = NULL, y = NULL) +
   theme_bri_map()
