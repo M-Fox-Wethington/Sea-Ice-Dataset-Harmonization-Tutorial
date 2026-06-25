@@ -10,7 +10,6 @@ book:
   search: true
   repo-url: "https://github.com/M-Fox-Wethington/Sea-Ice-Dataset-Harmonization-Tutorial"
   repo-actions: [edit, issue]
-  downloads: [pdf]
   sidebar:
     style: docked
     collapse-level: 1
@@ -45,6 +44,3 @@ format:
     fig-width: 7
     fig-height: 5
     fig-dpi: 150
-  pdf:
-    documentclass: scrreprt
-    keep-tex: false
