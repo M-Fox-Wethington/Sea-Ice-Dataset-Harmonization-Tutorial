@@ -13,7 +13,11 @@
 *_files/
 *_cache/
 
-# renv: keep renv.lock, renv/activate.R, renv/settings.json; ignore the library
+# renv: keep renv.lock, renv/activate.R, renv/settings.json; ignore the library.
+# renv is opt-in here (run renv::restore() for pinned versions), so we do not
+# commit the auto-activating .Rprofile, keeping the default render on the
+# system library.
+.Rprofile
 renv/library/
 renv/local/
 renv/cellar/
