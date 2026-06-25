@@ -20,5 +20,6 @@ suppressMessages({
 
 source(here::here("R", "paths.R"))
 source(here::here("R", "io.R"))
+source(here::here("R", "harmonize.R"))
 source(here::here("R", "metrics.R"))
 source(here::here("R", "theme.R"))
