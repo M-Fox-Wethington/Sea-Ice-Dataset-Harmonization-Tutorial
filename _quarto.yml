@@ -1,0 +1,50 @@
+project:
+  type: book
+  output-dir: _book
+
+book:
+  title: "Harmonizing Antarctic Sea-Ice Datasets"
+  subtitle: "A reproducible R tutorial for cross-sensor harmonization of passive-microwave sea-ice concentration"
+  author: "Michael Wethington"
+  date: today
+  search: true
+  repo-url: "https://github.com/M-Fox-Wethington/Sea-Ice-Dataset-Harmonization-Tutorial"
+  repo-actions: [edit, issue]
+  downloads: [pdf]
+  sidebar:
+    style: docked
+    collapse-level: 1
+  chapters:
+    - index.qmd
+    - chapters/01-setup.qmd
+    - chapters/02-getting-data.qmd
+    - chapters/03-ingestion.qmd
+    - chapters/04-land-mask.qmd
+    - chapters/05-align-and-pair.qmd
+    - chapters/06-train-ann.qmd
+    - chapters/07-deploy-and-validate.qmd
+    - chapters/08-using-harmonized.qmd
+    - chapters/09-scaling-up.qmd
+    - references.qmd
+
+bibliography: references.bib
+
+execute:
+  freeze: auto
+  warning: false
+  message: false
+
+format:
+  html:
+    theme: cosmo
+    code-link: true
+    code-copy: true
+    code-overflow: wrap
+    toc: true
+    toc-depth: 3
+    fig-width: 7
+    fig-height: 5
+    fig-dpi: 150
+  pdf:
+    documentclass: scrreprt
+    keep-tex: false

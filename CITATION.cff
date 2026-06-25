@@ -1,0 +1,41 @@
+cff-version: 1.2.0
+title: "Sea-Ice Dataset Harmonization Tutorial"
+message: >-
+  If you use this tutorial or the harmonization method it teaches,
+  please cite the associated paper (see preferred-citation).
+type: software
+authors:
+  - family-names: Wethington
+    given-names: Michael
+    alias: m-fox-wethington
+    affiliation: Biodiversity Research Institute
+repository-code: "https://github.com/M-Fox-Wethington/Sea-Ice-Dataset-Harmonization-Tutorial"
+license: MIT
+keywords:
+  - sea ice
+  - sea-ice concentration
+  - passive microwave
+  - data harmonization
+  - cross-sensor calibration
+  - statistical downscaling
+  - Antarctic Peninsula
+  - AMSR
+  - NSIDC
+  - remote sensing
+  - R
+preferred-citation:
+  type: article
+  title: >-
+    Winter sea-ice decline drives gentoo penguin population expansion
+    along the western Antarctic Peninsula
+  authors:
+    - family-names: Wethington
+      given-names: Michael
+    - family-names: Lynch
+      given-names: Heather J.
+  journal: Marine Ecology Progress Series
+  volume: 787
+  start: 1
+  end: 19
+  year: 2026
+  doi: 10.3354/meps15149

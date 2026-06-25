@@ -1,0 +1,40 @@
+# R
+.Rproj.user/
+.Rhistory
+.RData
+.Ruserdata
+*.Rproj
+
+# Quarto
+/.quarto/
+/_book/
+/_site/
+/_freeze/
+*_files/
+*_cache/
+
+# renv: keep renv.lock, renv/activate.R, renv/settings.json; ignore the library
+renv/library/
+renv/local/
+renv/cellar/
+renv/sandbox/
+renv/staging/
+
+# OS cruft
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Large / downloaded source data. The small instructional sample under
+# data/sample/ is committed explicitly and re-included below.
+/data/raw/
+/data/full/
+/data/downloads/
+*.he5
+
+# Scratch space written by chapters during a render
+/_work/
+
+# Re-include the bundled sample
+!data/sample/
+!data/sample/**
