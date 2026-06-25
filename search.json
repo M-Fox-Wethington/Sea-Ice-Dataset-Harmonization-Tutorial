@@ -1,0 +1,462 @@
+[
+  {
+    "objectID": "index.html",
+    "href": "index.html",
+    "title": "Harmonizing Antarctic Sea-Ice Datasets",
+    "section": "",
+    "text": "Overview\nThis tutorial shows how to combine two satellite sea-ice products that disagree on spatial resolution and time span into a single, internally consistent record you can analyze as one dataset. The worked example rebuilds the harmonized sea-ice dataset behind Wethington and Lynch (Wethington and Lynch 2026), but the method is general. It applies to any two gridded sea-ice concentration products that overlap in time, in either hemisphere.",
+    "crumbs": [
+      "Overview"
+    ]
+  },
+  {
+    "objectID": "index.html#the-problem-this-solves",
+    "href": "index.html#the-problem-this-solves",
+    "title": "Harmonizing Antarctic Sea-Ice Datasets",
+    "section": "The problem this solves",
+    "text": "The problem this solves\nSatellite passive microwave sensors have measured sea-ice concentration since 1979. Sea-ice concentration (hereafter SIC) is the fraction of a grid cell covered by ice, reported from 0 to 100 percent. Two facts about the satellite record are in tension. The long record is coarse: the U.S. National Snow and Ice Data Center (NSIDC) Sea Ice Index runs from 1979 to the present at 25 km resolution. The fine record is short: the Advanced Microwave Scanning Radiometer (AMSR) products resolve 12.5 km but only begin in the 2000s. Many analyses want both at once, the spatial detail of the fine product and the temporal depth of the coarse one.\nHarmonization bridges the two. Rather than splicing the records and accepting a discontinuity where the sensors change, we learn the relationship between the products during the years they overlap, then use that relationship to express the entire coarse record in terms of the fine one. The result is one continuous dataset whose values are consistent across the full period.",
+    "crumbs": [
+      "Overview"
+    ]
+  },
+  {
+    "objectID": "index.html#what-you-will-build",
+    "href": "index.html#what-you-will-build",
+    "title": "Harmonizing Antarctic Sea-Ice Datasets",
+    "section": "What you will build",
+    "text": "What you will build\nBy the end you will have produced a daily harmonized SIC dataset for the western Antarctic Peninsula spanning 1979 to 2023, expressed on the 12.5 km AMSR grid, together with the figures that validate it against the real AMSR observations over the overlap years. The final chapter then uses that dataset to compute the standard sea-ice metrics (extent, concentration, persistence, and duration) and to estimate a long-term winter trend.",
+    "crumbs": [
+      "Overview"
+    ]
+  },
+  {
+    "objectID": "index.html#the-method-in-brief",
+    "href": "index.html#the-method-in-brief",
+    "title": "Harmonizing Antarctic Sea-Ice Datasets",
+    "section": "The method in brief",
+    "text": "The method in brief\nThe core idea is a cross-sensor transfer function. We pair the coarse and fine products pixel by pixel and day by day over their overlapping years, train a model that predicts the fine-product SIC from the coarse-product SIC, and then apply that model to the full coarse record. Following the paper, the model is a small artificial neural network (ANN) fit with the nnet package. Because a one-input ANN invites the question of whether something simpler would do, we also fit a linear and a quantile-mapping baseline and compare them, so the choice of model is something you can see rather than take on faith.",
+    "crumbs": [
+      "Overview"
+    ]
+  },
+  {
+    "objectID": "index.html#who-this-is-for",
+    "href": "index.html#who-this-is-for",
+    "title": "Harmonizing Antarctic Sea-Ice Datasets",
+    "section": "Who this is for",
+    "text": "Who this is for\nYou should be comfortable reading and running R and manipulating data frames. Prior geospatial experience helps but is not assumed; we explain each raster operation as it appears, using the terra package throughout. The statistics stay at the level of a regression and a small neural network, both of which we build up step by step.",
+    "crumbs": [
+      "Overview"
+    ]
+  },
+  {
+    "objectID": "index.html#how-the-data-works",
+    "href": "index.html#how-the-data-works",
+    "title": "Harmonizing Antarctic Sea-Ice Datasets",
+    "section": "How the data works",
+    "text": "How the data works\nThe repository ships a small bundled sample under data/sample/, drawn from the real NSIDC products and clipped to the study area, so that every chapter runs end to end in a few minutes with no account and no large download. For real work you fetch the full products from NSIDC, which requires a free Earthdata login; 2  Getting the data from NSIDC walks through that. A single environment variable, SIH_MODE, switches the code between the bundled sample and your own full download, so the same chapters serve both the quick read-through and the production run.\nA few steps in the full pipeline are genuinely heavy, including the multi-decade download and the deployment of the trained model across the entire 1979 to 2023 record. Where that is the case, the chapter shows the code and the result it produced but does not re-run it during the site build. Each such block is labeled so you know what executes on the sample and what is shown frozen.",
+    "crumbs": [
+      "Overview"
+    ]
+  },
+  {
+    "objectID": "index.html#scope",
+    "href": "index.html#scope",
+    "title": "Harmonizing Antarctic Sea-Ice Datasets",
+    "section": "Scope",
+    "text": "Scope\nThis tutorial covers the harmonization itself and the sea-ice analysis that immediately follows from it. It stops at sea-ice metrics and a trend example. The penguin population modeling that motivated the original paper is deliberately out of scope, so that the method stands on its own and transfers to other questions.",
+    "crumbs": [
+      "Overview"
+    ]
+  },
+  {
+    "objectID": "index.html#citation-and-reuse",
+    "href": "index.html#citation-and-reuse",
+    "title": "Harmonizing Antarctic Sea-Ice Datasets",
+    "section": "Citation and reuse",
+    "text": "Citation and reuse\nIf you use this tutorial or the harmonization method, please cite the paper:\n\nWethington, M. and Lynch, H. J. (2026). Winter sea-ice decline drives gentoo penguin population expansion along the western Antarctic Peninsula. Marine Ecology Progress Series 787, 1-19. https://doi.org/10.3354/meps15149\n\nThe code is released under the MIT License and the written content under CC BY 4.0. The source repository, including the original research code this tutorial is adapted from, is linked in the sidebar.\n\n\n\n\nWethington, Michael, and Heather J. Lynch. 2026. “Winter Sea-Ice Decline Drives Gentoo Penguin Population Expansion Along the Western Antarctic Peninsula.” Marine Ecology Progress Series 787: 1–19. https://doi.org/10.3354/meps15149.",
+    "crumbs": [
+      "Overview"
+    ]
+  },
+  {
+    "objectID": "chapters/01-setup.html",
+    "href": "chapters/01-setup.html",
+    "title": "1  Setup and the problem",
+    "section": "",
+    "text": "1.1 Two records, one tension\nThis chapter gets your environment ready and frames the harmonization problem concretely, then shows you the resolution gap that motivates everything else with a first figure built from the bundled sample.\nThe western Antarctic Peninsula is one of the fastest-changing marine environments on Earth, and sea ice is the variable that ties much of that change together. To study it we lean on two satellite passive microwave products, and they pull in opposite directions.\nThe first is the NSIDC Sea Ice Index, a 25 km daily record that begins in 1979 and continues to the present (Fetterer et al. 2017). It is long, which is what you want for detecting multi-decadal change, but coarse, so it smears the narrow shelf and the island-dotted coastline of the Peninsula into a handful of large cells. The second is the Advanced Microwave Scanning Radiometer product, distributed by NSIDC as AU_SI12, a 12.5 km daily record that resolves the coast far better but only begins in the 2000s (Markus et al. 2018). You can have spatial detail or temporal depth, but no single product gives you both.\nHarmonization removes the choice. We learn how the coarse product maps onto the fine one during the years they overlap, then apply that mapping to the entire coarse record, producing one continuous 12.5 km dataset that reaches back to 1979.",
+    "crumbs": [
+      "<span class='chapter-number'>1</span>  <span class='chapter-title'>Setup and the problem</span>"
+    ]
+  },
+  {
+    "objectID": "chapters/01-setup.html#what-you-need",
+    "href": "chapters/01-setup.html#what-you-need",
+    "title": "1  Setup and the problem",
+    "section": "1.2 What you need",
+    "text": "1.2 What you need\nYou need R version 4.2 or newer and a handful of packages: terra and sf for the spatial work, nnet for the neural network, dplyr, tidyr, lubridate, and scales for data handling, ggplot2 and patchwork for figures, and here for project-relative paths. If you want to render this book yourself you also need Quarto. You do not need an NSIDC Earthdata account to follow along on the bundled sample; you need one only when you move to the full download in Chapter 2.",
+    "crumbs": [
+      "<span class='chapter-number'>1</span>  <span class='chapter-title'>Setup and the problem</span>"
+    ]
+  },
+  {
+    "objectID": "chapters/01-setup.html#getting-the-tutorial-and-its-environment",
+    "href": "chapters/01-setup.html#getting-the-tutorial-and-its-environment",
+    "title": "1  Setup and the problem",
+    "section": "1.3 Getting the tutorial and its environment",
+    "text": "1.3 Getting the tutorial and its environment\nClone the repository and enter it:\ngit clone https://github.com/M-Fox-Wethington/Sea-Ice-Dataset-Harmonization-Tutorial.git\ncd Sea-Ice-Dataset-Harmonization-Tutorial\nThe project pins its package versions with renv, so the most reliable way to reproduce the environment is to restore that lockfile:\n# install.packages(\"renv\")\nrenv::restore()\nIf you would rather not use renv, install the packages directly:\ninstall.packages(c(\"terra\", \"sf\", \"nnet\", \"dplyr\", \"tidyr\",\n                   \"lubridate\", \"scales\", \"ggplot2\", \"patchwork\", \"here\"))\nIf you prefer a fully self-contained environment, including the system libraries that terra and sf depend on, build the bundled container instead. The Dockerfile starts from the Rocker geospatial image, so GDAL, GEOS, PROJ, and HDF5 are already present:\ndocker build -t seaice-harmonization .\ndocker run --rm -p 8787:8787 seaice-harmonization",
+    "crumbs": [
+      "<span class='chapter-number'>1</span>  <span class='chapter-title'>Setup and the problem</span>"
+    ]
+  },
+  {
+    "objectID": "chapters/01-setup.html#sample-data-or-full-data",
+    "href": "chapters/01-setup.html#sample-data-or-full-data",
+    "title": "1  Setup and the problem",
+    "section": "1.4 Sample data or full data",
+    "text": "1.4 Sample data or full data\nEvery chapter runs against one of two data sources, chosen by the SIH_MODE environment variable. The default is sample, which points at the small clipped dataset committed under data/sample/ and runs in minutes with no account. Setting SIH_MODE=full points the same code at your own download (see Chapter 2), with its location given by SIH_DATA_ROOT. The switch lives in R/paths.R, and you resolve the active paths like this:\n\nsource(here::here(\"R\", \"setup.R\"))\npaths &lt;- sih_paths()\npaths$mode\n\n[1] \"sample\"",
+    "crumbs": [
+      "<span class='chapter-number'>1</span>  <span class='chapter-title'>Setup and the problem</span>"
+    ]
+  },
+  {
+    "objectID": "chapters/01-setup.html#a-first-look",
+    "href": "chapters/01-setup.html#a-first-look",
+    "title": "1  Setup and the problem",
+    "section": "1.5 A first look",
+    "text": "1.5 A first look\nLoad the bundled sample for both products and compare their shapes. The two stacks hold the same 91 days of 2013, but at different resolutions.\n\namsr  &lt;- load_sic_stack(paths$amsr_dir)\nnsidc &lt;- load_sic_stack(paths$nsidc_dir)\n\nc(amsr_layers = terra::nlyr(amsr), nsidc_layers = terra::nlyr(nsidc))\n\n amsr_layers nsidc_layers \n          91           91 \n\ndata.frame(\n  product    = c(\"AMSR (AU_SI12)\", \"Sea Ice Index\"),\n  resolution = c(terra::res(amsr)[1], terra::res(nsidc)[1]),\n  ncell      = c(terra::ncell(amsr), terra::ncell(nsidc)),\n  crs        = c(terra::crs(amsr, describe = TRUE)$code,\n                 terra::crs(nsidc, describe = TRUE)$code)\n)\n\n         product resolution ncell  crs\n1 AMSR (AU_SI12)      12500 22400 3976\n2  Sea Ice Index      25000  6188 3976\n\n\nBoth products are already on the same projection, the WGS 84 NSIDC Sea Ice polar stereographic grid (EPSG:3976), so there is no reprojection to do between them. The only spatial difference is the cell size, and you can see it plainly by drawing the same day from each product.\n\nlibrary(patchwork)\n\nday &lt;- 40  # a mid-winter layer\np_amsr &lt;- ggplot(rast_to_df(amsr[[day]], \"sic\"), aes(x, y, fill = sic)) +\n  geom_raster() + scale_fill_sic() + coord_equal() +\n  labs(title = \"AMSR  12.5 km\", x = NULL, y = NULL) + theme_bri_map()\n\np_nsidc &lt;- ggplot(rast_to_df(nsidc[[day]], \"sic\"), aes(x, y, fill = sic)) +\n  geom_raster() + scale_fill_sic() + coord_equal() +\n  labs(title = \"Sea Ice Index  25 km\", x = NULL, y = NULL) + theme_bri_map()\n\np_amsr + p_nsidc + plot_layout(guides = \"collect\")\n\n\n\n\n\n\n\nFigure 1.1: The same winter day at two resolutions. The 12.5 km AMSR product (left) resolves the Peninsula coast and the marginal ice zone far more sharply than the 25 km Sea Ice Index (right). Land and missing cells are left blank.\n\n\n\n\n\nThat difference in grain is the whole reason to harmonize rather than simply splice the records together. We want the long Sea Ice Index history, but expressed at the sharper AMSR resolution.",
+    "crumbs": [
+      "<span class='chapter-number'>1</span>  <span class='chapter-title'>Setup and the problem</span>"
+    ]
+  },
+  {
+    "objectID": "chapters/01-setup.html#how-this-book-is-organized",
+    "href": "chapters/01-setup.html#how-this-book-is-organized",
+    "title": "1  Setup and the problem",
+    "section": "1.6 How this book is organized",
+    "text": "1.6 How this book is organized\nChapter 2 walks through downloading the full products from NSIDC. Chapter 3 converts the native files to analysis-ready GeoTIFFs and explains the value coding. Chapter 4 builds the land mask. Chapter 5 reconciles the two products onto a common grid and pairs them pixel by pixel. Chapter 6 fits and tunes the neural network and compares it against simpler baselines. Chapter 7 deploys the model across the full record and validates it. Chapter 8 computes sea-ice metrics and a long-term trend from the harmonized dataset. Chapter 9 covers running at full scale and adapting the method to other products and regions.\n\n\n\n\nFetterer, Florence, Kenneth Knowles, Walter N. Meier, Matthew Savoie, and Ann K. Windnagel. 2017. Sea Ice Index, Version 3. Https://nsidc.org/data/g02135; NSIDC: National Snow; Ice Data Center.\n\n\nMarkus, Thorsten, Josefino C. Comiso, and Walter N. Meier. 2018. AMSR-E/AMSR2 Unified L3 Daily 12.5 Km Brightness Temperatures, Sea Ice Concentration, Motion and Snow Depth Polar Grids, Version 1. Https://nsidc.org/data/au_si12/versions/1; NASA National Snow; Ice Data Center Distributed Active Archive Center.",
+    "crumbs": [
+      "<span class='chapter-number'>1</span>  <span class='chapter-title'>Setup and the problem</span>"
+    ]
+  },
+  {
+    "objectID": "chapters/02-getting-data.html",
+    "href": "chapters/02-getting-data.html",
+    "title": "2  Getting the data from NSIDC",
+    "section": "",
+    "text": "2.1 Which product needs a login\nYou need this chapter only when you move beyond the bundled sample to build the real multi-decade dataset. The sample under data/sample/ already contains post-ingestion clips, so if you are reading straight through you can skim this chapter and pick up the live work again in Chapter 3. Nothing here runs during the book build, because it requires credentials and downloads many gigabytes; every command is shown for you to run yourself.\nThe two products are hosted differently, which affects how you fetch them.\nThe AMSR product (AU_SI12) is distributed by the NASA National Snow and Ice Data Center Distributed Active Archive Center, and downloading it requires a free NASA Earthdata Login. Register once at https://urs.earthdata.nasa.gov. The Sea Ice Index (G02135) is a NOAA-at-NSIDC product and is openly accessible over HTTPS, so it needs no account. The two access patterns below reflect that split.\nNSIDC has been migrating its archive to the Earthdata Cloud, so the exact host names change over time. The authoritative download recipe always lives on each product’s data page under its “Download Data” tab, and the patterns below are representative rather than guaranteed-current. Confirm the current URLs on the product pages: AU_SI12 and G02135.",
+    "crumbs": [
+      "<span class='chapter-number'>2</span>  <span class='chapter-title'>Getting the data from NSIDC</span>"
+    ]
+  },
+  {
+    "objectID": "chapters/02-getting-data.html#set-up-earthdata-authentication",
+    "href": "chapters/02-getting-data.html#set-up-earthdata-authentication",
+    "title": "2  Getting the data from NSIDC",
+    "section": "2.2 Set up Earthdata authentication",
+    "text": "2.2 Set up Earthdata authentication\nThe standard way to authenticate a command-line download to NSIDC is a .netrc file holding your Earthdata credentials, which wget and curl read automatically. Create it in your home directory (the file is named .netrc on macOS and Linux, and _netrc on Windows):\necho \"machine urs.earthdata.nasa.gov login YOUR_USERNAME password YOUR_PASSWORD\" &gt;&gt; ~/.netrc\nchmod 600 ~/.netrc\nThe chmod matters on macOS and Linux, because wget refuses to read a .netrc that other users can see. On Windows the file permission step is unnecessary.",
+    "crumbs": [
+      "<span class='chapter-number'>2</span>  <span class='chapter-title'>Getting the data from NSIDC</span>"
+    ]
+  },
+  {
+    "objectID": "chapters/02-getting-data.html#download-amsr-au_si12",
+    "href": "chapters/02-getting-data.html#download-amsr-au_si12",
+    "title": "2  Getting the data from NSIDC",
+    "section": "2.3 Download AMSR (AU_SI12)",
+    "text": "2.3 Download AMSR (AU_SI12)\nEach daily AU_SI12 file is an HDF-EOS5 (.he5) granule that contains both polar grids; we read only the southern-hemisphere sea-ice concentration field in Chapter 3. The granules are organized into date subdirectories. A recursive wget that authenticates through your .netrc and keeps the session cookie looks like this:\n# Representative pattern. Copy the exact base URL from the AU_SI12 data page,\n# which reflects the current Earthdata Cloud host.\nwget --load-cookies ~/.urs_cookies --save-cookies ~/.urs_cookies \\\n     --auth-no-challenge=on --keep-session-cookies \\\n     --no-check-certificate \\\n     --recursive --no-parent --no-directories \\\n     --accept \"AMSR_U2_L3_SeaIce12km_*.he5\" \\\n     --directory-prefix data/full/amsr_raw \\\n     \"https://n5eil01u.ecs.nsidc.org/AMSA/AU_SI12.001/2013.07.01/\"\nTo pull a multi-year span, loop over the date directories, or use the full date-list download script that the data page generates for you once you select a temporal range.",
+    "crumbs": [
+      "<span class='chapter-number'>2</span>  <span class='chapter-title'>Getting the data from NSIDC</span>"
+    ]
+  },
+  {
+    "objectID": "chapters/02-getting-data.html#download-sea-ice-index-g02135",
+    "href": "chapters/02-getting-data.html#download-sea-ice-index-g02135",
+    "title": "2  Getting the data from NSIDC",
+    "section": "2.4 Download Sea Ice Index (G02135)",
+    "text": "2.4 Download Sea Ice Index (G02135)\nWe use the southern-hemisphere daily concentration GeoTIFFs, the files named S_YYYYMMDD_concentration_v3.0.tif. They sit in a per-year directory tree and need no login:\n# Representative pattern; confirm the current host on the G02135 data page.\nwget --recursive --no-parent --no-directories \\\n     --accept \"S_*_concentration_v3.0.tif\" \\\n     --directory-prefix data/full/nsidc_raw \\\n     \"https://noaadata.apps.nsidc.org/NOAA/G02135/south/daily/geotiff/2013/\"",
+    "crumbs": [
+      "<span class='chapter-number'>2</span>  <span class='chapter-title'>Getting the data from NSIDC</span>"
+    ]
+  },
+  {
+    "objectID": "chapters/02-getting-data.html#a-manual-fallback",
+    "href": "chapters/02-getting-data.html#a-manual-fallback",
+    "title": "2  Getting the data from NSIDC",
+    "section": "2.5 A manual fallback",
+    "text": "2.5 A manual fallback\nIf the scripted download gives you trouble, both products can be fetched by hand. For AMSR, use Earthdata Search, search for “AU_SI12”, draw your time range and a polygon over the Peninsula, and download the granules. For the Sea Ice Index, the data page’s “Download Data” tab links straight into the GeoTIFF directory tree you can browse and click through. Once the files are on disk, the rest of the tutorial treats them the same way regardless of how they arrived.",
+    "crumbs": [
+      "<span class='chapter-number'>2</span>  <span class='chapter-title'>Getting the data from NSIDC</span>"
+    ]
+  },
+  {
+    "objectID": "chapters/02-getting-data.html#how-much-to-download",
+    "href": "chapters/02-getting-data.html#how-much-to-download",
+    "title": "2  Getting the data from NSIDC",
+    "section": "2.6 How much to download",
+    "text": "2.6 How much to download\nFor the western Antarctic Peninsula example you need only the southern-hemisphere files. The Sea Ice Index daily GeoTIFFs are small, on the order of tens of kilobytes each, so the full 1979 to 2023 record is a few gigabytes. The AMSR granules are larger, because each holds the full hemisphere at 12.5 km in HDF5, so a decade of daily files runs to tens of gigabytes. You can reduce the footprint substantially by clipping to the study area as you ingest, which is what Chapter 3 does.",
+    "crumbs": [
+      "<span class='chapter-number'>2</span>  <span class='chapter-title'>Getting the data from NSIDC</span>"
+    ]
+  },
+  {
+    "objectID": "chapters/02-getting-data.html#point-the-tutorial-at-your-download",
+    "href": "chapters/02-getting-data.html#point-the-tutorial-at-your-download",
+    "title": "2  Getting the data from NSIDC",
+    "section": "2.7 Point the tutorial at your download",
+    "text": "2.7 Point the tutorial at your download\nOnce the raw files are in place and converted (Chapter 3), arrange the cleaned daily clips into the same layout the sample uses, an amsr_12km/ directory and a nsidc_25km_seaiceindex/ directory, then tell the code to use them:\nSys.setenv(SIH_MODE = \"full\")\nSys.setenv(SIH_DATA_ROOT = \"/path/to/your/data/full\")\npaths &lt;- sih_paths()",
+    "crumbs": [
+      "<span class='chapter-number'>2</span>  <span class='chapter-title'>Getting the data from NSIDC</span>"
+    ]
+  },
+  {
+    "objectID": "chapters/02-getting-data.html#if-you-work-in-python",
+    "href": "chapters/02-getting-data.html#if-you-work-in-python",
+    "title": "2  Getting the data from NSIDC",
+    "section": "2.8 If you work in Python",
+    "text": "2.8 If you work in Python\nNASA maintains earthaccess, a Python package that handles Earthdata authentication, search, and download in a few lines and is often the smoothest route for the AMSR granules. It is outside this R tutorial, but if Python is already part of your workflow it is worth knowing that you can do the fetch there and bring only the converted GeoTIFFs into R.",
+    "crumbs": [
+      "<span class='chapter-number'>2</span>  <span class='chapter-title'>Getting the data from NSIDC</span>"
+    ]
+  },
+  {
+    "objectID": "chapters/03-ingestion.html",
+    "href": "chapters/03-ingestion.html",
+    "title": "3  Ingestion: from native files to analysis-ready clips",
+    "section": "",
+    "text": "3.1 Reading the AMSR granule\nThe downloaded files are not yet usable for analysis. The AMSR granules are HDF-EOS5 containers holding many fields on two hemispheric grids, and the Sea Ice Index GeoTIFFs store concentration as integers from 0 to 1000 mixed with flag codes for land, coast, and missing data. This chapter turns both into clean daily rasters of sea-ice concentration on a 0 to 1 scale, with land and missing cells set to NA. The result is exactly the form the bundled sample is already in, so this is the step that produced data/sample/.\nEach AU_SI12 file is an HDF-EOS5 (.he5) granule. The southern-hemisphere daily sea-ice concentration lives in a single subdataset, SI_12km_SH_ICECON_DAY, on the NSIDC south polar stereographic 12.5 km grid. The code below is shown rather than run, because the raw granules are large and require an Earthdata download (Chapter 2); running it over your download produces the clips in data/sample/amsr_12km/.\n# Discover the subdatasets in a granule (names vary slightly by GDAL build).\nterra::describe(\"AMSR_U2_L3_SeaIce12km_B04_20130701.he5\", sds = TRUE)\n\ningest_amsr &lt;- function(he5_path, study_area, out_dir) {\n  # Read just the southern-hemisphere daily concentration grid.\n  sic &lt;- terra::rast(he5_path, subds = \"SI_12km_SH_ICECON_DAY\")\n\n  # The AU_SI12 south grid is the NSIDC SSM/I polar stereographic projection\n  # (EPSG:3412). Assign it if the file does not carry it.\n  if (is.na(terra::crs(sic, describe = TRUE)$code)) terra::crs(sic) &lt;- \"EPSG:3412\"\n\n  # Flag codes: 110 = missing, 120 = land. Everything else is 0-100 percent.\n  sic[sic == 110 | sic == 120] &lt;- NA\n  sic &lt;- sic / 100                       # 0-100 percent -&gt; 0-1 fraction\n\n  # Reproject onto the analysis grid (EPSG:3976) and clip to the study area.\n  sic &lt;- terra::project(sic, sih_config$target_crs, method = \"bilinear\")\n  sic &lt;- terra::crop(sic, study_area, mask = TRUE)\n\n  date &lt;- regmatches(basename(he5_path), regexpr(\"[0-9]{8}\", basename(he5_path)))\n  terra::writeRaster(sic, file.path(out_dir, paste0(\"AMSR_12km_\", date, \".tif\")),\n                     overwrite = TRUE, datatype = \"FLT4S\")\n}\nTwo choices in that function are worth stating plainly. We reproject AMSR to EPSG:3976 so both products share one grid, and because AMSR is the fine reference we keep its 12.5 km resolution as the target everything else is matched to. We also clip to the study area on the way in, which is what keeps the per-file footprint to a few kilobytes.",
+    "crumbs": [
+      "<span class='chapter-number'>3</span>  <span class='chapter-title'>Ingestion: from native files to analysis-ready clips</span>"
+    ]
+  },
+  {
+    "objectID": "chapters/03-ingestion.html#cleaning-the-sea-ice-index",
+    "href": "chapters/03-ingestion.html#cleaning-the-sea-ice-index",
+    "title": "3  Ingestion: from native files to analysis-ready clips",
+    "section": "3.2 Cleaning the Sea Ice Index",
+    "text": "3.2 Cleaning the Sea Ice Index\nThe Sea Ice Index GeoTIFFs we can work with directly, and the sample ships one raw granule so you can see the cleaning happen. Load it and look at the value coding.\n\nraw_file &lt;- list.files(file.path(paths$base, \"raw_example\"),\n                       pattern = \"\\\\.tif$\", full.names = TRUE)[1]\nraw &lt;- terra::rast(raw_file)\nterra::crs(raw, describe = TRUE)$code\n\n[1] \"3976\"\n\nrange(terra::values(raw), na.rm = TRUE)\n\n[1]    0 2540\n\n\nThe values run from 0 to 2540, which mixes real concentration with flags. The Sea Ice Index encodes sea-ice concentration as 0 to 1000 (tenths of a percent), and reserves four codes above that: 2510 for the pole hole, 2530 for the coastline, 2540 for land, and 2550 for missing data. Cleaning means turning every flag into NA, rescaling the genuine values to a 0 to 1 fraction, and clipping to the Peninsula.\n\nstudy_area &lt;- terra::vect(paths$study_area)\n\nclean_sii &lt;- function(r, study_area) {\n  r &lt;- terra::clamp(r, upper = 1000, values = FALSE)  # flags &gt; 1000 -&gt; NA\n  r &lt;- r / 1000                                       # 0-1000 -&gt; 0-1 fraction\n  terra::crop(r, study_area, mask = FALSE)\n}\n\nclean &lt;- clean_sii(raw, study_area)\nrange(terra::values(clean), na.rm = TRUE)\n\n[1] 0 1\n\n\nDrawing the raw and cleaned granule side by side shows what changed. The raw panel is dominated by the land and missing flags that swamp the color scale; the cleaned panel is concentration alone, over the Peninsula.\n\nlibrary(patchwork)\np_raw &lt;- ggplot(rast_to_df(raw, \"v\"), aes(x, y, fill = v)) +\n  geom_raster() + coord_equal() +\n  scale_fill_viridis_c(name = \"raw value\", na.value = NA) +\n  labs(title = \"Raw granule (0-2540)\", x = NULL, y = NULL) + theme_bri_map()\np_clean &lt;- ggplot(rast_to_df(clean, \"sic\"), aes(x, y, fill = sic)) +\n  geom_raster() + scale_fill_sic() + coord_equal() +\n  labs(title = \"Cleaned, clipped (0-1)\", x = NULL, y = NULL) + theme_bri_map()\np_raw + p_clean\n\n\n\n\n\n\n\nFigure 3.1: Cleaning one Sea Ice Index granule. Left: the raw GeoTIFF over the full hemisphere, where flag codes up to 2540 dominate the scale. Right: after setting flags to NA, rescaling to 0-1, and clipping to the study area.\n\n\n\n\n\nApplying clean_sii() to every daily granule, and the AMSR function to every .he5, produces the two directories of clean daily clips that the sample provides. From here on, both products are clean rasters of concentration on a 0 to 1 scale, and load_sic_stack() (introduced in Chapter 1) assembles a directory of them into a dated time series in one call.",
+    "crumbs": [
+      "<span class='chapter-number'>3</span>  <span class='chapter-title'>Ingestion: from native files to analysis-ready clips</span>"
+    ]
+  },
+  {
+    "objectID": "chapters/04-land-mask.html",
+    "href": "chapters/04-land-mask.html",
+    "title": "4  Building the land mask",
+    "section": "",
+    "text": "4.1 Deriving the mask from the flag codes\nA land mask is a raster that marks which cells are land rather than ocean. We need one for two reasons. It lets us draw land as a solid backdrop in the difference maps later (Chapter 7), so the eye is not distracted by color in places where sea-ice concentration is meaningless. It also gives us an explicit record of which cells are land, separate from cells that are merely missing on a given day, which both end up as NA once a granule is cleaned.\nThe convenient thing about the Sea Ice Index encoding is that it already tells us where land is. The same flag codes we set to NA during cleaning identify land (2540) and coastline (2530), so we can derive the mask straight from a raw granule rather than going to an external coastline dataset.\nRead the raw granule again, keep only the land and coast codes, and clip to the study area.\nraw_file &lt;- list.files(file.path(paths$base, \"raw_example\"),\n                       pattern = \"\\\\.tif$\", full.names = TRUE)[1]\nraw &lt;- terra::rast(raw_file)\nstudy_area &lt;- terra::vect(paths$study_area)\n\n# Land (2540) and coastline (2530) -&gt; 1; everything else -&gt; NA.\nland &lt;- terra::ifel(raw == 2540 | raw == 2530, 1, NA)\nland &lt;- terra::crop(land, study_area)\n\nland\n\nclass       : SpatRaster\nsize        : 87, 64, 1  (nrow, ncol, nlyr)\nresolution  : 25000, 25000  (x, y)\nextent      : -3300000, -1700000, 175000, 2350000  (xmin, xmax, ymin, ymax)\ncoord. ref. : WGS 84 / NSIDC Sea Ice Polar Stereographic South (EPSG:3976)\nsource(s)   : memory\nvarname     : S_20130101_concentration_v3.0\nname        : S_20130101_concentration_v3.0\nmin value   :                             1\nmax value   :                             1\nThat single-layer raster, land cells equal to 1 and everything else NA, is the mask. The sample already ships the same thing as data/sample/land_mask/land_mask.tif, so in the chapters that follow we load that file rather than re-deriving it.\nland_df &lt;- subset(rast_to_df(land, \"land\"), !is.na(land))\nggplot(land_df, aes(x, y)) +\n  geom_tile(fill = COLORS$coastline,\n            width = terra::res(land)[1], height = terra::res(land)[2]) +\n  coord_equal() +\n  labs(title = \"Land mask\", x = NULL, y = NULL) +\n  theme_bri_map()\n\n\n\n\n\n\n\nFigure 4.1: The derived land mask over the western Antarctic Peninsula. Land and coastline cells (grey) come from the Sea Ice Index flag codes; ocean is left blank.",
+    "crumbs": [
+      "<span class='chapter-number'>4</span>  <span class='chapter-title'>Building the land mask</span>"
+    ]
+  },
+  {
+    "objectID": "chapters/04-land-mask.html#a-note-on-resolution",
+    "href": "chapters/04-land-mask.html#a-note-on-resolution",
+    "title": "4  Building the land mask",
+    "section": "4.2 A note on resolution",
+    "text": "4.2 A note on resolution\nThis mask is at the 25 km Sea Ice Index resolution, which is the resolution it was derived from. When we use it as a backdrop under the 12.5 km harmonized maps it reads as a slightly blockier coastline than the data it sits behind, which is cosmetically fine for a background layer. If you wanted a crisp 12.5 km mask you could derive it instead from an AMSR granule, whose land flag (code 120) plays the same role, or resample this one onto the finer grid. For the validation figures in this tutorial the 25 km mask is sufficient.\nWith both products cleaned and a land mask in hand, we can bring the two records onto a common grid and pair them, which is the subject of the next chapter.",
+    "crumbs": [
+      "<span class='chapter-number'>4</span>  <span class='chapter-title'>Building the land mask</span>"
+    ]
+  },
+  {
+    "objectID": "chapters/05-align-and-pair.html",
+    "href": "chapters/05-align-and-pair.html",
+    "title": "5  Aligning and pairing the two products",
+    "section": "",
+    "text": "5.1 Putting both products on one grid\nTo learn how the coarse product relates to the fine one, we need to compare them cell for cell on the same days. That requires three things: the two stacks on one grid, restricted to the dates they share, and then flattened into a table with one row per pixel per day. This chapter does all three and ends with a picture of the relationship the model will learn.\nBoth products already share a projection (EPSG:3976), so there is no reprojection to do. What differs is the grid: AMSR is 12.5 km and the Sea Ice Index is 25 km, and their extents differ slightly. We resample the coarse product onto the fine grid with bilinear interpolation, which is appropriate for a smoothly varying field like concentration. The fine AMSR grid is the target, so AMSR itself is never altered.\nnsidc_aligned &lt;- align_products(fine = amsr, coarse = nsidc)\n\nrbind(\n  amsr          = dim(amsr),\n  nsidc_raw     = dim(nsidc),\n  nsidc_aligned = dim(nsidc_aligned)\n)\n\n              [,1] [,2] [,3]\namsr           175  128   91\nnsidc_raw       91   68   91\nnsidc_aligned  175  128   91\nThe aligned coarse stack now has the same number of rows, columns, and layers as AMSR, so the two line up cell for cell.\nThis step is worth a comment, because it is the one place where this tutorial departs from the published research notebook. In that notebook the line that resamples the coarse product to 12.5 km was commented out, so the network was trained and applied on the native 25 km grid and the “12.5 km” in the output name described alignment with the AMSR extent rather than the actual cell size. We make the resample explicit, so the harmonized product genuinely sits on the 12.5 km grid and the label is accurate. The transfer function the network learns is a per-pixel value mapping either way; resampling first simply means the output grid is the fine one.",
+    "crumbs": [
+      "<span class='chapter-number'>5</span>  <span class='chapter-title'>Aligning and pairing the two products</span>"
+    ]
+  },
+  {
+    "objectID": "chapters/05-align-and-pair.html#restricting-to-shared-dates",
+    "href": "chapters/05-align-and-pair.html#restricting-to-shared-dates",
+    "title": "5  Aligning and pairing the two products",
+    "section": "5.2 Restricting to shared dates",
+    "text": "5.2 Restricting to shared dates\nIn general the two records only overlap for part of their span, so we pair on the dates they share. The helper stack_dates() returns each stack’s layer dates, and we keep the intersection. In the bundled sample the two products were built on the same 91 days, so all of them match, but the pattern is the one you would use on the full records where the overlap is a subset.\n\nad &lt;- stack_dates(amsr)\nnd &lt;- stack_dates(nsidc_aligned)\ncommon &lt;- as.Date(intersect(ad, nd), origin = \"1970-01-01\")\n\namsr_ov  &lt;- amsr[[which(ad %in% common)]]\nnsidc_ov &lt;- nsidc_aligned[[which(nd %in% common)]]\nlength(common)\n\n[1] 91",
+    "crumbs": [
+      "<span class='chapter-number'>5</span>  <span class='chapter-title'>Aligning and pairing the two products</span>"
+    ]
+  },
+  {
+    "objectID": "chapters/05-align-and-pair.html#pairing-pixel-by-pixel",
+    "href": "chapters/05-align-and-pair.html#pairing-pixel-by-pixel",
+    "title": "5  Aligning and pairing the two products",
+    "section": "5.3 Pairing pixel by pixel",
+    "text": "5.3 Pairing pixel by pixel\nNow flatten both stacks into a single table. build_pairs() reads the two stacks in the same cell-and-layer order, drops any pixel that is NA in either (land and missing data), and returns a data frame with one row per ocean pixel per shared day.\n\npairs &lt;- build_pairs(fine = amsr_ov, coarse_aligned = nsidc_ov)\nnrow(pairs)\n\n[1] 1790771\n\nhead(pairs)\n\n  nsidc amsr\n1     0    0\n2     0    0\n3     0    0\n4     0    0\n5     0    0\n6     0    0\n\n\nThat is a large training table from a modest amount of data: even this single year of every-fourth-day sampling yields well over a million paired observations, because each day contributes thousands of ocean pixels.",
+    "crumbs": [
+      "<span class='chapter-number'>5</span>  <span class='chapter-title'>Aligning and pairing the two products</span>"
+    ]
+  },
+  {
+    "objectID": "chapters/05-align-and-pair.html#the-relationship-to-be-learned",
+    "href": "chapters/05-align-and-pair.html#the-relationship-to-be-learned",
+    "title": "5  Aligning and pairing the two products",
+    "section": "5.4 The relationship to be learned",
+    "text": "5.4 The relationship to be learned\nPlotting the paired values against each other shows why harmonization is needed and what the model has to do. If the two products agreed perfectly, every point would fall on the dashed one-to-one line. They do not: the coarse Sea Ice Index and the fine AMSR systematically disagree, especially at intermediate concentrations near the ice edge, where the coarser footprint mixes ice and open water differently.\n\nggplot(pairs, aes(nsidc, amsr)) +\n  geom_bin2d(bins = 80) +\n  scale_fill_gradientn(colours = c(\"#deebf7\", \"#6baed6\", \"#2171b5\", \"#08306b\"),\n                       trans = \"log10\", name = \"pixels\") +\n  geom_abline(slope = 1, intercept = 0, linetype = \"dashed\", color = COLORS$accent_red) +\n  coord_equal(xlim = c(0, 1), ylim = c(0, 1)) +\n  labs(title = \"Sea Ice Index vs AMSR, paired pixels\",\n       x = \"Sea Ice Index (25 km), SIC\", y = \"AMSR (12.5 km), SIC\") +\n  theme_bri()\n\n\n\n\n\n\n\nFigure 5.1: The paired relationship the model will learn, as a 2D density of the roughly 1.8 million paired pixels. The dashed line is one-to-one (perfect agreement). The cloud’s departure from it, strongest at mid-range concentrations, is the cross-sensor bias the transfer function corrects.\n\n\n\n\n\nA quick numerical summary confirms the eye: the two products are strongly correlated but not identical, and the coarse product carries a small mean offset relative to the fine one.\n\nc(correlation   = cor(pairs$nsidc, pairs$amsr),\n  mean_bias     = mean(pairs$nsidc - pairs$amsr),\n  rmse_raw      = sqrt(mean((pairs$nsidc - pairs$amsr)^2)))\n\ncorrelation   mean_bias    rmse_raw \n 0.96820496 -0.06927442  0.14655607 \n\n\nThe next chapter fits a model to this relationship and asks whether a neural network does better than a straight line.",
+    "crumbs": [
+      "<span class='chapter-number'>5</span>  <span class='chapter-title'>Aligning and pairing the two products</span>"
+    ]
+  },
+  {
+    "objectID": "chapters/06-train-ann.html",
+    "href": "chapters/06-train-ann.html",
+    "title": "6  Training the transfer model",
+    "section": "",
+    "text": "6.1 A training and test split\nThe transfer function is the heart of the method: a model that takes a coarse-product concentration and returns the fine-product concentration it corresponds to. Following the paper, the model is a small artificial neural network, but a one-input network is simple enough that you should ask whether a straight line would do as well. This chapter fits the network, tunes it, and answers that question by comparing it against a linear fit and a quantile-mapping baseline on held-out data.\nWe hold out 20 percent of the paired pixels to judge the models on data they did not see. The neural network is also trained on a random subsample rather than all 1.8 million pairs, which keeps the tutorial fast without changing the fitted relationship in any material way; at full scale you would train on all the pairs or a larger sample, parallelizing the search (see Chapter 9).\nset.seed(sih_config$seed)\nn   &lt;- nrow(pairs)\nsub &lt;- if (n &gt; 80000) pairs[sample(n, 80000), ] else pairs\ntr  &lt;- sample(nrow(sub), sih_config$train_frac * nrow(sub))\ntrain &lt;- sub[tr, ]\ntest  &lt;- sub[-tr, ]\nrmse  &lt;- function(a, b) sqrt(mean((a - b)^2))",
+    "crumbs": [
+      "<span class='chapter-number'>6</span>  <span class='chapter-title'>Training the transfer model</span>"
+    ]
+  },
+  {
+    "objectID": "chapters/06-train-ann.html#tuning-the-network",
+    "href": "chapters/06-train-ann.html#tuning-the-network",
+    "title": "6  Training the transfer model",
+    "section": "6.2 Tuning the network",
+    "text": "6.2 Tuning the network\nA single-hidden-layer network has two settings that matter here: size, the number of hidden units, and decay, a weight penalty that guards against overfitting. We search the same grid the paper used and pick the combination with the lowest error on the held-out set. The search uses a modest iteration cap for speed; the chosen model is then refit to convergence.\n\ngrid &lt;- expand.grid(size = sih_config$ann_size_grid,\n                    decay = sih_config$ann_decay_grid)\ngrid$rmse &lt;- NA_real_\nfor (i in seq_len(nrow(grid))) {\n  set.seed(sih_config$seed)\n  m &lt;- nnet(amsr ~ nsidc, data = train, size = grid$size[i], decay = grid$decay[i],\n            maxit = 150, linout = TRUE, trace = FALSE)\n  p &lt;- pmin(pmax(predict(m, test), 0), 1)\n  grid$rmse[i] &lt;- rmse(test$amsr, p)\n}\nbest &lt;- grid[which.min(grid$rmse), ]\ngrid[order(grid$rmse), ]\n\n   size decay       rmse\n8     7 1e-03 0.07268338\n13    7 1e-04 0.07269860\n15   15 1e-04 0.07272119\n14   10 1e-04 0.07274739\n10   15 1e-03 0.07274801\n7     5 1e-03 0.07276282\n9    10 1e-03 0.07276937\n12    5 1e-04 0.07278311\n11    3 1e-04 0.07278499\n6     3 1e-03 0.07278530\n5    15 1e-02 0.07278785\n2     5 1e-02 0.07278796\n1     3 1e-02 0.07278844\n3     7 1e-02 0.07278887\n4    10 1e-02 0.07278911\n\n\n\nset.seed(sih_config$seed)\nann &lt;- nnet(amsr ~ nsidc, data = train,\n            size = best$size, decay = best$decay,\n            maxit = sih_config$ann_maxit, linout = TRUE, trace = FALSE)",
+    "crumbs": [
+      "<span class='chapter-number'>6</span>  <span class='chapter-title'>Training the transfer model</span>"
+    ]
+  },
+  {
+    "objectID": "chapters/06-train-ann.html#the-baselines",
+    "href": "chapters/06-train-ann.html#the-baselines",
+    "title": "6  Training the transfer model",
+    "section": "6.3 The baselines",
+    "text": "6.3 The baselines\nThe linear baseline is an ordinary least-squares fit of AMSR on the Sea Ice Index. The quantile-mapping baseline is the standard bias-correction trick: it lines up the two products’ value distributions, mapping each coarse value to the fine value at the same quantile. Both are one-line ideas, which is the point; if the network cannot beat them, it is not earning its complexity.\n\nlinear &lt;- lm(amsr ~ nsidc, data = train)\n\nqmap_fit &lt;- function(x, y, probs = seq(0, 1, 0.01)) {\n  list(qx = quantile(x, probs, na.rm = TRUE), qy = quantile(y, probs, na.rm = TRUE))\n}\nqmap_predict &lt;- function(fit, x) approx(fit$qx, fit$qy, xout = x, rule = 2)$y\nqm &lt;- qmap_fit(train$nsidc, train$amsr)\n\nclamp01 &lt;- function(p) pmin(pmax(as.numeric(p), 0), 1)\npreds &lt;- list(\n  \"Raw (no harmonization)\" = test$nsidc,\n  \"Linear\"                 = clamp01(predict(linear, test)),\n  \"Quantile mapping\"       = clamp01(qmap_predict(qm, test$nsidc)),\n  \"Neural network\"         = clamp01(predict(ann, test))\n)\ndata.frame(\n  method = names(preds),\n  rmse   = round(sapply(preds, function(p) rmse(test$amsr, p)), 4),\n  row.names = NULL\n)\n\n                  method   rmse\n1 Raw (no harmonization) 0.1462\n2                 Linear 0.1074\n3       Quantile mapping 0.0741\n4         Neural network 0.0724\n\n\nThe network gives the lowest held-out error, the linear and quantile fits land close to each other in the middle, and all three improve substantially on doing nothing. The improvement is not because the network is complex; it is because the relationship in Chapter 5 bends, and a straight line cannot follow the curve near the ice edge while the network can. The transfer functions make that visible.\n\ngx &lt;- data.frame(nsidc = seq(0, 1, 0.005))\ncurves &lt;- data.frame(\n  nsidc            = gx$nsidc,\n  Linear           = clamp01(predict(linear, gx)),\n  `Quantile mapping` = clamp01(qmap_predict(qm, gx$nsidc)),\n  `Neural network` = clamp01(predict(ann, gx)),\n  check.names = FALSE\n) |&gt;\n  tidyr::pivot_longer(-nsidc, names_to = \"method\", values_to = \"amsr\")\n\nggplot(curves, aes(nsidc, amsr, color = method)) +\n  geom_abline(slope = 1, intercept = 0, linetype = \"dashed\", color = \"grey60\") +\n  geom_line(linewidth = 1) +\n  scale_color_manual(values = c(\"Linear\" = COLORS$accent_teal,\n                                \"Quantile mapping\" = COLORS$accent_amber,\n                                \"Neural network\" = COLORS$accent_red),\n                     name = NULL) +\n  coord_equal(xlim = c(0, 1), ylim = c(0, 1)) +\n  labs(title = \"Fitted transfer functions\",\n       x = \"Sea Ice Index (25 km), SIC\", y = \"Predicted AMSR (12.5 km), SIC\") +\n  theme_bri() + theme(legend.position = c(0.75, 0.18))\n\n\n\n\n\n\n\nFigure 6.1: The three fitted transfer functions, each mapping a Sea Ice Index value (x) to a predicted AMSR value (y), against the one-to-one line. The linear fit is a straight line by construction; the quantile and network fits bend to follow the curved relationship, with the network smoothest.\n\n\n\n\n\nWe save the fitted network so the next chapter can apply it without retraining.\n\nw &lt;- sih_work_dir()\nsaveRDS(ann, file.path(w, \"ann_model.rds\"))\nsaveRDS(best, file.path(w, \"best_params.rds\"))",
+    "crumbs": [
+      "<span class='chapter-number'>6</span>  <span class='chapter-title'>Training the transfer model</span>"
+    ]
+  },
+  {
+    "objectID": "chapters/07-deploy-and-validate.html",
+    "href": "chapters/07-deploy-and-validate.html",
+    "title": "7  Deploying and validating",
+    "section": "",
+    "text": "7.1 Deploying the model\nWith a fitted transfer function in hand, harmonizing is simple: apply the model to every cell of the coarse record. In the full workflow that record is the entire 1979 to 2023 Sea Ice Index, and the call is the same one shown here applied to a larger stack. On the sample we apply it to the overlap year, which lets us check the harmonized values against the AMSR observations they are meant to match. This chapter does the deployment and then validates it three ways: an overall error number, an extent time series, and difference maps in space.\ndeploy_model() applies the network to every cell of the coarse stack and clamps the predictions to the valid range, returning a harmonized stack on the 12.5 km grid.\nharmonized &lt;- deploy_model(ann, nsidc)\nharmonized\n\nclass       : SpatRaster\nsize        : 175, 128, 91  (nrow, ncol, nlyr)\nresolution  : 12500, 12500  (x, y)\nextent      : -3312500, -1712500, 162500, 2350000  (xmin, xmax, ymin, ymax)\ncoord. ref. : WGS 84 / NSIDC Sea Ice Polar Stereographic South (EPSG:3976)\nsource(s)   : memory\nnames       : 2013-01-01, 2013-01-05, 2013-01-09, 2013-01-13, 2013-01-17, 2013-01-21, ...\nmin values  :   0.002991,   0.002991,   0.002991,   0.002991,   0.002991,   0.002991, ...\nmax values  :          1,          1,          1,          1,          1,          1, ...\ntime (days) : 2013-01-01 to 2013-12-30 (91 steps)",
+    "crumbs": [
+      "<span class='chapter-number'>7</span>  <span class='chapter-title'>Deploying and validating</span>"
+    ]
+  },
+  {
+    "objectID": "chapters/07-deploy-and-validate.html#how-much-did-harmonization-help",
+    "href": "chapters/07-deploy-and-validate.html#how-much-did-harmonization-help",
+    "title": "7  Deploying and validating",
+    "section": "7.2 How much did harmonization help?",
+    "text": "7.2 How much did harmonization help?\nThe single most useful number is the pooled root-mean-square error against AMSR, before and after. Harmonization should move the coarse product substantially closer to the fine one.\n\ndata.frame(\n  comparison = c(\"Raw Sea Ice Index vs AMSR\", \"Harmonized vs AMSR\"),\n  rmse       = round(c(sic_rmse(nsidc, amsr), sic_rmse(harmonized, amsr)), 4)\n)\n\n                 comparison   rmse\n1 Raw Sea Ice Index vs AMSR 0.1466\n2        Harmonized vs AMSR 0.0745",
+    "crumbs": [
+      "<span class='chapter-number'>7</span>  <span class='chapter-title'>Deploying and validating</span>"
+    ]
+  },
+  {
+    "objectID": "chapters/07-deploy-and-validate.html#tracking-ice-extent-through-the-year",
+    "href": "chapters/07-deploy-and-validate.html#tracking-ice-extent-through-the-year",
+    "title": "7  Deploying and validating",
+    "section": "7.3 Tracking ice extent through the year",
+    "text": "7.3 Tracking ice extent through the year\nA more interpretable check is total sea-ice extent, the area of all cells at or above 15 percent concentration, computed for each day. If harmonization works, the harmonized curve should sit closer to the AMSR curve than the raw Sea Ice Index does, across the whole seasonal cycle.\n\ndates &lt;- stack_dates(amsr)\next_df &lt;- data.frame(\n  date                  = dates,\n  `AMSR (observed)`     = sic_extent_km2(amsr),\n  `Sea Ice Index (raw)` = sic_extent_km2(nsidc),\n  `Harmonized`          = sic_extent_km2(harmonized),\n  check.names = FALSE\n) |&gt;\n  tidyr::pivot_longer(-date, names_to = \"product\", values_to = \"extent\")\n\nggplot(ext_df, aes(date, extent / 1e6, color = product)) +\n  geom_line(linewidth = 0.7) +\n  scale_color_manual(values = dataset_colors, name = NULL) +\n  labs(title = \"Daily sea-ice extent, validation year\",\n       x = NULL, y = expression(\"Extent (\" * 10^6 * \" km\"^2 * \")\")) +\n  theme_bri() + theme(legend.position = \"top\")\n\n\n\n\n\n\n\nFigure 7.1: Daily sea-ice extent through the validation year for the AMSR observations, the raw Sea Ice Index, and the harmonized product. The harmonized curve follows AMSR more closely than the raw coarse product does, especially through the winter maximum.",
+    "crumbs": [
+      "<span class='chapter-number'>7</span>  <span class='chapter-title'>Deploying and validating</span>"
+    ]
+  },
+  {
+    "objectID": "chapters/07-deploy-and-validate.html#where-the-products-differ-in-space",
+    "href": "chapters/07-deploy-and-validate.html#where-the-products-differ-in-space",
+    "title": "7  Deploying and validating",
+    "section": "7.4 Where the products differ, in space",
+    "text": "7.4 Where the products differ, in space\nExtent is a single number per day, so it can hide spatial structure. Mapping the per-pixel difference between AMSR and each product on a representative day shows where the disagreement lives and whether harmonization fixes it. We draw land in black and use a diverging scale centered on zero, so blue is where AMSR reads lower than the product and orange where it reads higher.\n\nlibrary(patchwork)\nday  &lt;- 40\nland &lt;- terra::resample(terra::rast(paths$land_mask), amsr[[1]], method = \"near\")\nland_df  &lt;- subset(rast_to_df(land, \"m\"), !is.na(m))\nland_res &lt;- terra::res(land)\n\nmk_diff &lt;- function(diff_layer, title) {\n  ggplot() +\n    geom_tile(data = land_df, aes(x, y), fill = \"black\",\n              width = land_res[1], height = land_res[2]) +\n    geom_raster(data = rast_to_df(diff_layer, \"d\"), aes(x, y, fill = d)) +\n    scale_fill_sic_diff() + coord_equal() +\n    labs(title = title, x = NULL, y = NULL) + theme_bri_map()\n}\n\np_raw  &lt;- mk_diff(amsr[[day]] - nsidc[[day]],      \"AMSR - raw Sea Ice Index\")\np_harm &lt;- mk_diff(amsr[[day]] - harmonized[[day]], \"AMSR - harmonized\")\np_raw + p_harm + plot_layout(guides = \"collect\")\n\n\n\n\n\n\n\nFigure 7.2: Per-pixel concentration difference on one winter day, AMSR minus the product. Left: against the raw Sea Ice Index, showing systematic disagreement along the ice edge. Right: against the harmonized product, where the differences are smaller and less structured. Land is black.",
+    "crumbs": [
+      "<span class='chapter-number'>7</span>  <span class='chapter-title'>Deploying and validating</span>"
+    ]
+  },
+  {
+    "objectID": "chapters/07-deploy-and-validate.html#where-harmonization-helps-most",
+    "href": "chapters/07-deploy-and-validate.html#where-harmonization-helps-most",
+    "title": "7  Deploying and validating",
+    "section": "7.5 Where harmonization helps most",
+    "text": "7.5 Where harmonization helps most\nFinally, the per-pixel RMSE through time turns the whole validation year into one map per comparison, showing which parts of the domain harmonization improves. The reduction is largest along the marginal ice zone, the band where the coarse footprint struggles most.\n\nrmse_raw  &lt;- sic_rmse_pixel(amsr, nsidc)\nrmse_harm &lt;- sic_rmse_pixel(amsr, harmonized)\n\nmk_rmse &lt;- function(r, title) {\n  ggplot() +\n    geom_tile(data = land_df, aes(x, y), fill = \"grey20\",\n              width = land_res[1], height = land_res[2]) +\n    geom_raster(data = rast_to_df(r, \"rmse\"), aes(x, y, fill = rmse)) +\n    scale_fill_viridis_c(option = \"magma\", direction = -1, limits = c(0, NA),\n                         name = \"RMSE\", na.value = NA) +\n    coord_equal() + labs(title = title, x = NULL, y = NULL) + theme_bri_map()\n}\nmk_rmse(rmse_raw, \"Raw Sea Ice Index\") + mk_rmse(rmse_harm, \"Harmonized\") +\n  plot_layout(guides = \"collect\")\n\n\n\n\n\n\n\nFigure 7.3: Per-pixel RMSE against AMSR across the validation year. Left: the raw Sea Ice Index. Right: the harmonized product. Lower (lighter) is better; the largest gains are along the ice edge.\n\n\n\n\n\nAcross all three views the story is consistent. Harmonization lowers the pooled error, pulls the extent curve onto the AMSR observations, and shrinks the spatial differences most where they were largest. The harmonized product behaves like AMSR over the years we can check, which is what licenses using it to extend the fine-resolution record back to 1979. The next chapter puts that extended record to work.",
+    "crumbs": [
+      "<span class='chapter-number'>7</span>  <span class='chapter-title'>Deploying and validating</span>"
+    ]
+  },
+  {
+    "objectID": "chapters/08-using-harmonized.html",
+    "href": "chapters/08-using-harmonized.html",
+    "title": "8  Using the harmonized dataset",
+    "section": "",
+    "text": "8.1 The standard metrics\nThe harmonized record is now a single consistent dataset that reaches from 1979 to 2023 at 12.5 km. This chapter shows what that buys you. We compute the standard sea-ice metrics on the sample to demonstrate the code, then use the full harmonized record to estimate the long-term winter trend, which is the payoff: a fine-resolution trend across four decades that neither input product could give you alone.\nFour metrics summarize a sea-ice record. Extent is the area of cells at or above 15 percent concentration. Concentration is the mean SIC over the region. Persistence is how much of a season a given location holds ice, the proportion of days it is ice-covered. Duration is how long ice spells last, the run of consecutive ice-covered days. Extent and concentration are computed per day and summarized; persistence and duration are computed per pixel over a season.\nThe first two are one call each. Restricting to the austral winter (June to September) gives the season the Peninsula analysis cares about.\ndates  &lt;- stack_dates(harmonized)\nwinter &lt;- which(lubridate::month(dates) %in% sih_config$winter_months)\nharm_winter &lt;- harmonized[[winter]]\n\nc(winter_days        = length(winter),\n  mean_extent_km2    = round(mean(sic_extent_km2(harm_winter))),\n  mean_concentration = round(mean(sic_mean(harm_winter)), 3))\n\n       winter_days    mean_extent_km2 mean_concentration \n            31.000        1744526.000              0.525\nPersistence is a per-pixel metric: for each cell, the fraction of winter days it is ice-covered. Mapping it shows the spatial pattern of where ice is reliable versus marginal.\npersistence &lt;- terra::app(harm_winter,\n  fun = function(x) mean(x &gt;= sih_config$ice_threshold, na.rm = TRUE))\n\nggplot(rast_to_df(persistence, \"p\"), aes(x, y, fill = p)) +\n  geom_raster() +\n  scale_fill_viridis_c(name = \"Persistence\", limits = c(0, 1), na.value = NA) +\n  coord_equal() +\n  labs(title = \"Winter ice persistence\", x = NULL, y = NULL) +\n  theme_bri_map()\n\n\n\n\n\n\n\nFigure 8.1: Winter ice persistence on the sample harmonized product: the fraction of winter days each cell is at or above 15 percent concentration. Values near 1 (dark) are reliably ice-covered; values near 0 are open water or the marginal ice zone.\nDuration, the mean length of consecutive ice-covered spells, is defined the same way the paper computes it, with a run-length encoding of each pixel’s daily series. It needs a genuinely daily record to count consecutive days correctly, so we define it here but compute it on the full daily product rather than on the every-fourth-day sample:\nmean_spell_duration &lt;- function(x, threshold = 0.15) {\n  x &lt;- x[!is.na(x)]\n  if (length(x) == 0) return(NA_real_)\n  runs &lt;- rle(x &gt;= threshold)\n  if (!any(runs$values)) return(0)\n  mean(runs$lengths[runs$values])\n}\nduration &lt;- terra::app(harm_winter_daily, fun = mean_spell_duration)",
+    "crumbs": [
+      "<span class='chapter-number'>8</span>  <span class='chapter-title'>Using the harmonized dataset</span>"
+    ]
+  },
+  {
+    "objectID": "chapters/08-using-harmonized.html#the-long-term-trend",
+    "href": "chapters/08-using-harmonized.html#the-long-term-trend",
+    "title": "8  Using the harmonized dataset",
+    "section": "8.2 The long-term trend",
+    "text": "8.2 The long-term trend\nHere is the reason to harmonize. With one consistent 12.5 km record from 1979 to 2023, we can compute winter extent for every year and fit a trend. On the full record the per-year winter mean extent declines significantly over the four decades. The figure below was produced from the complete harmonized product by scripts/build_frozen.R; it does not run here, because it needs the full record rather than the sample.\n\n\n\n\n\n\n\n\nFigure 8.2: Mean winter (June-September) sea-ice extent for the western Antarctic Peninsula, 1979-2023, from the harmonized product. The fitted linear trend is a decline of roughly 46,000 km2 per decade (p = 0.037). The short fine-resolution AMSR record alone could not resolve a trend this slow.\n\n\n\n\n\nA regional average hides where the change happens. Fitting the same trend at every pixel turns the record into a map of winter concentration change, which is where the harmonized product’s spatial detail pays off.\n\n\n\n\n\n\n\n\nFigure 8.3: Per-pixel trend in winter sea-ice concentration, 1979-2023, in percent per decade. Red is declining ice, blue increasing. The 12.5 km grid resolves structure along the shelf and the coast that a 25 km product would blur.\n\n\n\n\n\nA word on the trend method. For the per-year regional series we fit an ordinary least-squares line, which is enough for a single value per year. The paper fits a generalized least-squares model with a first-order autoregressive term to the finer monthly series, because successive months are autocorrelated and ignoring that would understate the uncertainty; a Theil-Sen slope is a robust alternative when outliers are a concern. The per-pixel map uses ordinary least squares at each cell. Whichever estimator you choose, the point is the same: harmonization is what makes a 1979-2023 trend at 12.5 km possible at all, because it expresses the long coarse record in the terms of the short fine one.\nThe final chapter covers running this at full scale and adapting the method to other products and regions.",
+    "crumbs": [
+      "<span class='chapter-number'>8</span>  <span class='chapter-title'>Using the harmonized dataset</span>"
+    ]
+  },
+  {
+    "objectID": "chapters/09-scaling-up.html",
+    "href": "chapters/09-scaling-up.html",
+    "title": "9  Scaling up and adapting the method",
+    "section": "",
+    "text": "9.1 Running at full scale\nThe bundled sample runs in minutes, but the real dataset is larger and you will want to apply the method to your own products and regions. This chapter covers both: running at full scale, and adapting the pipeline. It is mostly guidance rather than executed code, because the operations it describes need the full download.\nThe full pipeline is heavier than the sample in three specific places, and each has a standard remedy.\nThe download is the first. The Sea Ice Index record is small even across four decades, but the AMSR granules are large because each holds the whole hemisphere in HDF5. Clip to your study area as you ingest (Chapter 3), which is what keeps the per-file footprint to kilobytes and the whole working set to something a laptop can hold.\nTraining is the second. The sample produced roughly 1.8 million paired pixels from a single year; the full 2012-to-present overlap produces far more. You do not need all of them. The transfer function is a per-pixel value relationship, so a large random subsample of pairs estimates it as well as the full set, and nnet on millions of rows is slow. Take a representative subsample, and confirm it is large enough by checking that the held-out RMSE stops changing as you add more pairs. The hyperparameter search parallelizes cleanly, one model per core, which is how the paper ran it:\nDeployment is the third. Applying the model across thousands of daily layers is memory-bound, not compute-bound, because the model itself is tiny. terra::app() streams the raster from disk rather than holding it in memory, so the main lever is to process the record in chunks, for example one year or one winter season at a time, writing each chunk to a GeoTIFF or NetCDF stack and reassembling at the end. The writeCDF() and per-year stack patterns in the FrostBound_AQ repository show one way to organize this.",
+    "crumbs": [
+      "<span class='chapter-number'>9</span>  <span class='chapter-title'>Scaling up and adapting the method</span>"
+    ]
+  },
+  {
+    "objectID": "chapters/09-scaling-up.html#running-at-full-scale",
+    "href": "chapters/09-scaling-up.html#running-at-full-scale",
+    "title": "9  Scaling up and adapting the method",
+    "section": "",
+    "text": "library(foreach); library(doParallel)\ncl &lt;- makeCluster(parallel::detectCores() - 1); registerDoParallel(cl)\nresults &lt;- foreach(i = seq_len(nrow(grid)), .combine = rbind, .packages = \"nnet\") %dopar% {\n  m &lt;- nnet(amsr ~ nsidc, data = train, size = grid$size[i], decay = grid$decay[i],\n            maxit = 500, linout = TRUE, trace = FALSE)\n  data.frame(grid[i, ], rmse = rmse(test$amsr, pmin(pmax(predict(m, test), 0), 1)))\n}\nstopCluster(cl)",
+    "crumbs": [
+      "<span class='chapter-number'>9</span>  <span class='chapter-title'>Scaling up and adapting the method</span>"
+    ]
+  },
+  {
+    "objectID": "chapters/09-scaling-up.html#adapting-to-other-products-and-regions",
+    "href": "chapters/09-scaling-up.html#adapting-to-other-products-and-regions",
+    "title": "9  Scaling up and adapting the method",
+    "section": "9.2 Adapting to other products and regions",
+    "text": "9.2 Adapting to other products and regions\nNothing in the method is specific to AMSR, the Sea Ice Index, or the Peninsula. To retarget it, change four things and leave the rest alone.\nChange the ingestion to match your products. Each passive-microwave product has its own subdataset or variable name, its own flag codes for land and missing data, and its own value scaling, and Chapter 3 is where those live. The NASA Bootstrap product (NSIDC-0079) and the NOAA/NSIDC Climate Data Record are natural coarse alternatives to the Sea Ice Index, and the FrostBound_AQ repository carries a Bootstrap ingestion pipeline alongside the Sea Ice Index one.\nChange the target grid. We harmonized onto the 12.5 km AMSR grid in EPSG:3976. For the Arctic you would use a northern polar stereographic projection such as EPSG:3413; for a regional study you might pick a local equal-area grid. The fine product you are harmonizing toward defines the target.\nChange the study-area clip and the season. The clip is just the polygon you crop to. The austral winter definition of June through September is a Southern Hemisphere, Peninsula-specific choice; an Arctic study would use a different season, and a year-round analysis would drop the winter filter entirely.",
+    "crumbs": [
+      "<span class='chapter-number'>9</span>  <span class='chapter-title'>Scaling up and adapting the method</span>"
+    ]
+  },
+  {
+    "objectID": "chapters/09-scaling-up.html#what-harmonization-does-and-does-not-do",
+    "href": "chapters/09-scaling-up.html#what-harmonization-does-and-does-not-do",
+    "title": "9  Scaling up and adapting the method",
+    "section": "9.3 What harmonization does and does not do",
+    "text": "9.3 What harmonization does and does not do\nIt is worth being clear about the method’s limits, because they bound how far you should trust the output. The transfer function is a per-pixel value correction: it learns how the coarse product’s concentration values relate to the fine product’s and rewrites the coarse record accordingly. It is not super-resolution. The spatial detail in the harmonized product beyond the coarse footprint comes from resampling the coarse field onto the fine grid, not from new information about sub-footprint structure, so the harmonized 12.5 km product is smoother within each original 25 km cell than a true 12.5 km observation would be.\nTwo assumptions ride along with it. The transfer function is fit where the products overlap and then applied to years when only the coarse product exists, which assumes the sensor relationship is stable through time. It is also fit by pooling pixels across the domain, which assumes the relationship does not vary much in space. Both are reasonable for nearby passive-microwave products over a single region, and the overlap-period validation in Chapter 7 is how you check them, but if the relationship drifts or varies spatially you would extend the model with predictors for season or location rather than a single input. The one-input network used here is the right starting point precisely because it is simple enough to validate honestly.\nThe discipline that makes the method trustworthy is the validation. Always report the overlap-period error, the extent comparison, and the spatial differences before using the extended record, and treat a harmonized value in 1980 as a model-based estimate informed by the coarse observation, not as a direct measurement.",
+    "crumbs": [
+      "<span class='chapter-number'>9</span>  <span class='chapter-title'>Scaling up and adapting the method</span>"
+    ]
+  },
+  {
+    "objectID": "chapters/09-scaling-up.html#where-to-go-next",
+    "href": "chapters/09-scaling-up.html#where-to-go-next",
+    "title": "9  Scaling up and adapting the method",
+    "section": "9.4 Where to go next",
+    "text": "9.4 Where to go next\nThe full research code behind this tutorial, including the population analysis it fed, is in the FrostBound_AQ repository, and the method and its application are described in Wethington and Lynch (2026). The data products are documented on their NSIDC pages for AU_SI12 and the Sea Ice Index.\n\n\n\n\nWethington, Michael, and Heather J. Lynch. 2026. “Winter Sea-Ice Decline Drives Gentoo Penguin Population Expansion Along the Western Antarctic Peninsula.” Marine Ecology Progress Series 787: 1–19. https://doi.org/10.3354/meps15149.",
+    "crumbs": [
+      "<span class='chapter-number'>9</span>  <span class='chapter-title'>Scaling up and adapting the method</span>"
+    ]
+  },
+  {
+    "objectID": "references.html",
+    "href": "references.html",
+    "title": "References",
+    "section": "",
+    "text": "Fetterer, Florence, Kenneth Knowles, Walter N. Meier, Matthew Savoie,\nand Ann K. Windnagel. 2017. Sea Ice Index, Version 3. Https://nsidc.org/data/g02135; NSIDC: National Snow; Ice\nData Center.\n\n\nMarkus, Thorsten, Josefino C. Comiso, and Walter N. Meier. 2018.\nAMSR-E/AMSR2 Unified L3 Daily 12.5 Km\nBrightness Temperatures, Sea Ice Concentration, Motion and Snow Depth\nPolar Grids, Version 1. Https://nsidc.org/data/au_si12/versions/1; NASA National\nSnow; Ice Data Center Distributed Active Archive Center.\n\n\nWethington, Michael, and Heather J. Lynch. 2026. “Winter Sea-Ice\nDecline Drives Gentoo Penguin Population Expansion Along the Western\nAntarctic Peninsula.” Marine\nEcology Progress Series 787: 1–19. https://doi.org/10.3354/meps15149.",
+    "crumbs": [
+      "References"
+    ]
+  }
+]

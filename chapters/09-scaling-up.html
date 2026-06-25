@@ -6,10 +6,8 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
-<meta name="author" content="Michael Wethington">
-<meta name="dcterms.date" content="2026-06-25">
 
-<title>Harmonizing Antarctic Sea-Ice Datasets</title>
+<title>9&nbsp; Scaling up and adapting the method – Harmonizing Antarctic Sea-Ice Datasets</title>
 <style>
 /* Default styles provided by pandoc.
 ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
@@ -24,6 +22,41 @@ ul.task-list li input[type="checkbox"] {
   width: 0.8em;
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
 }
 /* CSS for citations */
 div.csl-bib-body { }
@@ -47,24 +80,25 @@ div.csl-indent {
 }</style>
 
 
-<script src="site_libs/quarto-nav/quarto-nav.js"></script>
-<script src="site_libs/quarto-nav/headroom.min.js"></script>
-<script src="site_libs/clipboard/clipboard.min.js"></script>
-<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
-<script src="site_libs/quarto-search/fuse.min.js"></script>
-<script src="site_libs/quarto-search/quarto-search.js"></script>
-<meta name="quarto:offset" content="./">
-<link href="./chapters/01-setup.html" rel="next">
-<script src="site_libs/quarto-html/quarto.js" type="module"></script>
-<script src="site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
-<script src="site_libs/quarto-html/popper.min.js"></script>
-<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
-<script src="site_libs/quarto-html/anchor.min.js"></script>
-<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="site_libs/quarto-html/quarto-syntax-highlighting-15634bcf2e68342d4ad2dfa704d543f6.css" rel="stylesheet" id="quarto-text-highlighting-styles">
-<script src="site_libs/bootstrap/bootstrap.min.js"></script>
-<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="site_libs/bootstrap/bootstrap-b46251e7dcf17699132ee8d5ea3a66e5.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script src="../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../">
+<link href="../references.html" rel="next">
+<link href="../chapters/08-using-harmonized.html" rel="prev">
+<script src="../site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="../site_libs/quarto-html/popper.min.js"></script>
+<script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-15634bcf2e68342d4ad2dfa704d543f6.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../site_libs/bootstrap/bootstrap-b46251e7dcf17699132ee8d5ea3a66e5.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "sidebar",
   "copy-button": false,
@@ -105,7 +139,7 @@ div.csl-indent {
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./index.html">Overview</a></li></ol></nav>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../chapters/09-scaling-up.html"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Scaling up and adapting the method</span></a></li></ol></nav>
         <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
       <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
@@ -120,7 +154,7 @@ div.csl-indent {
   <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation docked overflow-auto">
     <div class="pt-lg-2 mt-2 text-left sidebar-header">
     <div class="sidebar-title mb-0 py-0">
-      <a href="./">Harmonizing Antarctic Sea-Ice Datasets</a> 
+      <a href="../">Harmonizing Antarctic Sea-Ice Datasets</a> 
         <div class="sidebar-tools-main">
     <a href="https://github.com/M-Fox-Wethington/Sea-Ice-Dataset-Harmonization-Tutorial" title="Source Code" class="quarto-navigation-tool px-1" aria-label="Source Code"><i class="bi bi-github"></i></a>
 </div>
@@ -135,67 +169,67 @@ div.csl-indent {
     <ul class="list-unstyled mt-1">
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./index.html" class="sidebar-item-text sidebar-link active">
+  <a href="../index.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Overview</span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./chapters/01-setup.html" class="sidebar-item-text sidebar-link">
+  <a href="../chapters/01-setup.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Setup and the problem</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./chapters/02-getting-data.html" class="sidebar-item-text sidebar-link">
+  <a href="../chapters/02-getting-data.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Getting the data from NSIDC</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./chapters/03-ingestion.html" class="sidebar-item-text sidebar-link">
+  <a href="../chapters/03-ingestion.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Ingestion: from native files to analysis-ready clips</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./chapters/04-land-mask.html" class="sidebar-item-text sidebar-link">
+  <a href="../chapters/04-land-mask.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Building the land mask</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./chapters/05-align-and-pair.html" class="sidebar-item-text sidebar-link">
+  <a href="../chapters/05-align-and-pair.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Aligning and pairing the two products</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./chapters/06-train-ann.html" class="sidebar-item-text sidebar-link">
+  <a href="../chapters/06-train-ann.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Training the transfer model</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./chapters/07-deploy-and-validate.html" class="sidebar-item-text sidebar-link">
+  <a href="../chapters/07-deploy-and-validate.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Deploying and validating</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./chapters/08-using-harmonized.html" class="sidebar-item-text sidebar-link">
+  <a href="../chapters/08-using-harmonized.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Using the harmonized dataset</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./chapters/09-scaling-up.html" class="sidebar-item-text sidebar-link">
+  <a href="../chapters/09-scaling-up.html" class="sidebar-item-text sidebar-link active">
  <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Scaling up and adapting the method</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./references.html" class="sidebar-item-text sidebar-link">
+  <a href="../references.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">References</span></a>
   </div>
 </li>
@@ -209,45 +243,26 @@ div.csl-indent {
     <h2 id="toc-title">Table of contents</h2>
    
   <ul>
-  <li><a href="#overview" id="toc-overview" class="nav-link active" data-scroll-target="#overview">Overview</a>
-  <ul class="collapse">
-  <li><a href="#the-problem-this-solves" id="toc-the-problem-this-solves" class="nav-link" data-scroll-target="#the-problem-this-solves">The problem this solves</a></li>
-  <li><a href="#what-you-will-build" id="toc-what-you-will-build" class="nav-link" data-scroll-target="#what-you-will-build">What you will build</a></li>
-  <li><a href="#the-method-in-brief" id="toc-the-method-in-brief" class="nav-link" data-scroll-target="#the-method-in-brief">The method in brief</a></li>
-  <li><a href="#who-this-is-for" id="toc-who-this-is-for" class="nav-link" data-scroll-target="#who-this-is-for">Who this is for</a></li>
-  <li><a href="#how-the-data-works" id="toc-how-the-data-works" class="nav-link" data-scroll-target="#how-the-data-works">How the data works</a></li>
-  <li><a href="#scope" id="toc-scope" class="nav-link" data-scroll-target="#scope">Scope</a></li>
-  <li><a href="#citation-and-reuse" id="toc-citation-and-reuse" class="nav-link" data-scroll-target="#citation-and-reuse">Citation and reuse</a></li>
-  </ul></li>
+  <li><a href="#running-at-full-scale" id="toc-running-at-full-scale" class="nav-link active" data-scroll-target="#running-at-full-scale"><span class="header-section-number">9.1</span> Running at full scale</a></li>
+  <li><a href="#adapting-to-other-products-and-regions" id="toc-adapting-to-other-products-and-regions" class="nav-link" data-scroll-target="#adapting-to-other-products-and-regions"><span class="header-section-number">9.2</span> Adapting to other products and regions</a></li>
+  <li><a href="#what-harmonization-does-and-does-not-do" id="toc-what-harmonization-does-and-does-not-do" class="nav-link" data-scroll-target="#what-harmonization-does-and-does-not-do"><span class="header-section-number">9.3</span> What harmonization does and does not do</a></li>
+  <li><a href="#where-to-go-next" id="toc-where-to-go-next" class="nav-link" data-scroll-target="#where-to-go-next"><span class="header-section-number">9.4</span> Where to go next</a></li>
   </ul>
-<div class="toc-actions"><ul><li><a href="https://github.com/M-Fox-Wethington/Sea-Ice-Dataset-Harmonization-Tutorial/edit/main/index.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/M-Fox-Wethington/Sea-Ice-Dataset-Harmonization-Tutorial/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></nav>
+<div class="toc-actions"><ul><li><a href="https://github.com/M-Fox-Wethington/Sea-Ice-Dataset-Harmonization-Tutorial/edit/main/chapters/09-scaling-up.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/M-Fox-Wethington/Sea-Ice-Dataset-Harmonization-Tutorial/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></nav>
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title">Harmonizing Antarctic Sea-Ice Datasets</h1>
-<p class="subtitle lead">A reproducible R tutorial for cross-sensor harmonization of passive-microwave sea-ice concentration</p>
+<h1 class="title"><span id="sec-scaling" class="quarto-section-identifier"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Scaling up and adapting the method</span></span></h1>
 </div>
 
 
 
 <div class="quarto-title-meta">
 
-    <div>
-    <div class="quarto-title-meta-heading">Author</div>
-    <div class="quarto-title-meta-contents">
-             <p>Michael Wethington </p>
-          </div>
-  </div>
     
-    <div>
-    <div class="quarto-title-meta-heading">Published</div>
-    <div class="quarto-title-meta-contents">
-      <p class="date">June 25, 2026</p>
-    </div>
-  </div>
   
     
   </div>
@@ -257,42 +272,38 @@ div.csl-indent {
 </header>
 
 
-<section id="overview" class="level1 unnumbered">
-<h1 class="unnumbered">Overview</h1>
-<p>This tutorial shows how to combine two satellite sea-ice products that disagree on spatial resolution and time span into a single, internally consistent record you can analyze as one dataset. The worked example rebuilds the harmonized sea-ice dataset behind Wethington and Lynch <span class="citation" data-cites="wethington2026meps">(<a href="references.html#ref-wethington2026meps" role="doc-biblioref">Wethington and Lynch 2026</a>)</span>, but the method is general. It applies to any two gridded sea-ice concentration products that overlap in time, in either hemisphere.</p>
-<section id="the-problem-this-solves" class="level2">
-<h2 class="anchored" data-anchor-id="the-problem-this-solves">The problem this solves</h2>
-<p>Satellite passive microwave sensors have measured sea-ice concentration since 1979. Sea-ice concentration (hereafter SIC) is the fraction of a grid cell covered by ice, reported from 0 to 100 percent. Two facts about the satellite record are in tension. The long record is coarse: the U.S. National Snow and Ice Data Center (NSIDC) Sea Ice Index runs from 1979 to the present at 25 km resolution. The fine record is short: the Advanced Microwave Scanning Radiometer (AMSR) products resolve 12.5 km but only begin in the 2000s. Many analyses want both at once, the spatial detail of the fine product and the temporal depth of the coarse one.</p>
-<p>Harmonization bridges the two. Rather than splicing the records and accepting a discontinuity where the sensors change, we learn the relationship between the products during the years they overlap, then use that relationship to express the entire coarse record in terms of the fine one. The result is one continuous dataset whose values are consistent across the full period.</p>
+<p>The bundled sample runs in minutes, but the real dataset is larger and you will want to apply the method to your own products and regions. This chapter covers both: running at full scale, and adapting the pipeline. It is mostly guidance rather than executed code, because the operations it describes need the full download.</p>
+<section id="running-at-full-scale" class="level2" data-number="9.1">
+<h2 data-number="9.1" class="anchored" data-anchor-id="running-at-full-scale"><span class="header-section-number">9.1</span> Running at full scale</h2>
+<p>The full pipeline is heavier than the sample in three specific places, and each has a standard remedy.</p>
+<p>The download is the first. The Sea Ice Index record is small even across four decades, but the AMSR granules are large because each holds the whole hemisphere in HDF5. Clip to your study area as you ingest (<a href="03-ingestion.html" class="quarto-xref"><span>Chapter 3</span></a>), which is what keeps the per-file footprint to kilobytes and the whole working set to something a laptop can hold.</p>
+<p>Training is the second. The sample produced roughly 1.8 million paired pixels from a single year; the full 2012-to-present overlap produces far more. You do not need all of them. The transfer function is a per-pixel value relationship, so a large random subsample of pairs estimates it as well as the full set, and <code>nnet</code> on millions of rows is slow. Take a representative subsample, and confirm it is large enough by checking that the held-out RMSE stops changing as you add more pairs. The hyperparameter search parallelizes cleanly, one model per core, which is how the paper ran it:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(foreach); <span class="fu">library</span>(doParallel)</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>cl <span class="ot">&lt;-</span> <span class="fu">makeCluster</span>(parallel<span class="sc">::</span><span class="fu">detectCores</span>() <span class="sc">-</span> <span class="dv">1</span>); <span class="fu">registerDoParallel</span>(cl)</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>results <span class="ot">&lt;-</span> <span class="fu">foreach</span>(<span class="at">i =</span> <span class="fu">seq_len</span>(<span class="fu">nrow</span>(grid)), <span class="at">.combine =</span> rbind, <span class="at">.packages =</span> <span class="st">"nnet"</span>) <span class="sc">%dopar%</span> {</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>  m <span class="ot">&lt;-</span> <span class="fu">nnet</span>(amsr <span class="sc">~</span> nsidc, <span class="at">data =</span> train, <span class="at">size =</span> grid<span class="sc">$</span>size[i], <span class="at">decay =</span> grid<span class="sc">$</span>decay[i],</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>            <span class="at">maxit =</span> <span class="dv">500</span>, <span class="at">linout =</span> <span class="cn">TRUE</span>, <span class="at">trace =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">data.frame</span>(grid[i, ], <span class="at">rmse =</span> <span class="fu">rmse</span>(test<span class="sc">$</span>amsr, <span class="fu">pmin</span>(<span class="fu">pmax</span>(<span class="fu">predict</span>(m, test), <span class="dv">0</span>), <span class="dv">1</span>)))</span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="fu">stopCluster</span>(cl)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>Deployment is the third. Applying the model across thousands of daily layers is memory-bound, not compute-bound, because the model itself is tiny. <code>terra::app()</code> streams the raster from disk rather than holding it in memory, so the main lever is to process the record in chunks, for example one year or one winter season at a time, writing each chunk to a GeoTIFF or NetCDF stack and reassembling at the end. The <code>writeCDF()</code> and per-year stack patterns in the FrostBound_AQ repository show one way to organize this.</p>
 </section>
-<section id="what-you-will-build" class="level2">
-<h2 class="anchored" data-anchor-id="what-you-will-build">What you will build</h2>
-<p>By the end you will have produced a daily harmonized SIC dataset for the western Antarctic Peninsula spanning 1979 to 2023, expressed on the 12.5 km AMSR grid, together with the figures that validate it against the real AMSR observations over the overlap years. The final chapter then uses that dataset to compute the standard sea-ice metrics (extent, concentration, persistence, and duration) and to estimate a long-term winter trend.</p>
+<section id="adapting-to-other-products-and-regions" class="level2" data-number="9.2">
+<h2 data-number="9.2" class="anchored" data-anchor-id="adapting-to-other-products-and-regions"><span class="header-section-number">9.2</span> Adapting to other products and regions</h2>
+<p>Nothing in the method is specific to AMSR, the Sea Ice Index, or the Peninsula. To retarget it, change four things and leave the rest alone.</p>
+<p>Change the ingestion to match your products. Each passive-microwave product has its own subdataset or variable name, its own flag codes for land and missing data, and its own value scaling, and <a href="03-ingestion.html" class="quarto-xref"><span>Chapter 3</span></a> is where those live. The NASA Bootstrap product (NSIDC-0079) and the NOAA/NSIDC Climate Data Record are natural coarse alternatives to the Sea Ice Index, and the FrostBound_AQ repository carries a Bootstrap ingestion pipeline alongside the Sea Ice Index one.</p>
+<p>Change the target grid. We harmonized onto the 12.5 km AMSR grid in EPSG:3976. For the Arctic you would use a northern polar stereographic projection such as EPSG:3413; for a regional study you might pick a local equal-area grid. The fine product you are harmonizing toward defines the target.</p>
+<p>Change the study-area clip and the season. The clip is just the polygon you crop to. The austral winter definition of June through September is a Southern Hemisphere, Peninsula-specific choice; an Arctic study would use a different season, and a year-round analysis would drop the winter filter entirely.</p>
 </section>
-<section id="the-method-in-brief" class="level2">
-<h2 class="anchored" data-anchor-id="the-method-in-brief">The method in brief</h2>
-<p>The core idea is a cross-sensor transfer function. We pair the coarse and fine products pixel by pixel and day by day over their overlapping years, train a model that predicts the fine-product SIC from the coarse-product SIC, and then apply that model to the full coarse record. Following the paper, the model is a small artificial neural network (ANN) fit with the <code>nnet</code> package. Because a one-input ANN invites the question of whether something simpler would do, we also fit a linear and a quantile-mapping baseline and compare them, so the choice of model is something you can see rather than take on faith.</p>
+<section id="what-harmonization-does-and-does-not-do" class="level2" data-number="9.3">
+<h2 data-number="9.3" class="anchored" data-anchor-id="what-harmonization-does-and-does-not-do"><span class="header-section-number">9.3</span> What harmonization does and does not do</h2>
+<p>It is worth being clear about the method’s limits, because they bound how far you should trust the output. The transfer function is a per-pixel value correction: it learns how the coarse product’s concentration values relate to the fine product’s and rewrites the coarse record accordingly. It is not super-resolution. The spatial detail in the harmonized product beyond the coarse footprint comes from resampling the coarse field onto the fine grid, not from new information about sub-footprint structure, so the harmonized 12.5 km product is smoother within each original 25 km cell than a true 12.5 km observation would be.</p>
+<p>Two assumptions ride along with it. The transfer function is fit where the products overlap and then applied to years when only the coarse product exists, which assumes the sensor relationship is stable through time. It is also fit by pooling pixels across the domain, which assumes the relationship does not vary much in space. Both are reasonable for nearby passive-microwave products over a single region, and the overlap-period validation in <a href="07-deploy-and-validate.html" class="quarto-xref"><span>Chapter 7</span></a> is how you check them, but if the relationship drifts or varies spatially you would extend the model with predictors for season or location rather than a single input. The one-input network used here is the right starting point precisely because it is simple enough to validate honestly.</p>
+<p>The discipline that makes the method trustworthy is the validation. Always report the overlap-period error, the extent comparison, and the spatial differences before using the extended record, and treat a harmonized value in 1980 as a model-based estimate informed by the coarse observation, not as a direct measurement.</p>
 </section>
-<section id="who-this-is-for" class="level2">
-<h2 class="anchored" data-anchor-id="who-this-is-for">Who this is for</h2>
-<p>You should be comfortable reading and running R and manipulating data frames. Prior geospatial experience helps but is not assumed; we explain each raster operation as it appears, using the <code>terra</code> package throughout. The statistics stay at the level of a regression and a small neural network, both of which we build up step by step.</p>
-</section>
-<section id="how-the-data-works" class="level2">
-<h2 class="anchored" data-anchor-id="how-the-data-works">How the data works</h2>
-<p>The repository ships a small bundled sample under <code>data/sample/</code>, drawn from the real NSIDC products and clipped to the study area, so that every chapter runs end to end in a few minutes with no account and no large download. For real work you fetch the full products from NSIDC, which requires a free Earthdata login; <a href="chapters/02-getting-data.html" class="quarto-xref"><span>2&nbsp; Getting the data from NSIDC</span></a> walks through that. A single environment variable, <code>SIH_MODE</code>, switches the code between the bundled sample and your own full download, so the same chapters serve both the quick read-through and the production run.</p>
-<p>A few steps in the full pipeline are genuinely heavy, including the multi-decade download and the deployment of the trained model across the entire 1979 to 2023 record. Where that is the case, the chapter shows the code and the result it produced but does not re-run it during the site build. Each such block is labeled so you know what executes on the sample and what is shown frozen.</p>
-</section>
-<section id="scope" class="level2">
-<h2 class="anchored" data-anchor-id="scope">Scope</h2>
-<p>This tutorial covers the harmonization itself and the sea-ice analysis that immediately follows from it. It stops at sea-ice metrics and a trend example. The penguin population modeling that motivated the original paper is deliberately out of scope, so that the method stands on its own and transfers to other questions.</p>
-</section>
-<section id="citation-and-reuse" class="level2">
-<h2 class="anchored" data-anchor-id="citation-and-reuse">Citation and reuse</h2>
-<p>If you use this tutorial or the harmonization method, please cite the paper:</p>
-<blockquote class="blockquote">
-<p>Wethington, M. and Lynch, H. J. (2026). Winter sea-ice decline drives gentoo penguin population expansion along the western Antarctic Peninsula. <em>Marine Ecology Progress Series</em> 787, 1-19. <a href="https://doi.org/10.3354/meps15149" class="uri">https://doi.org/10.3354/meps15149</a></p>
-</blockquote>
-<p>The code is released under the MIT License and the written content under CC BY 4.0. The source repository, including the original research code this tutorial is adapted from, is linked in the sidebar.</p>
+<section id="where-to-go-next" class="level2" data-number="9.4">
+<h2 data-number="9.4" class="anchored" data-anchor-id="where-to-go-next"><span class="header-section-number">9.4</span> Where to go next</h2>
+<p>The full research code behind this tutorial, including the population analysis it fed, is in the <a href="https://github.com/M-Fox-Wethington/FrostBound_AQ">FrostBound_AQ repository</a>, and the method and its application are described in <span class="citation" data-cites="wethington2026meps">Wethington and Lynch (<a href="../references.html#ref-wethington2026meps" role="doc-biblioref">2026</a>)</span>. The data products are documented on their NSIDC pages for <a href="https://nsidc.org/data/au_si12/versions/1">AU_SI12</a> and the <a href="https://nsidc.org/data/g02135">Sea Ice Index</a>.</p>
 
 
 <div id="refs" class="references csl-bib-body hanging-indent" role="list" style="display: none">
@@ -300,7 +311,6 @@ div.csl-indent {
 Wethington, Michael, and Heather J. Lynch. 2026. <span>“Winter Sea-Ice Decline Drives Gentoo Penguin Population Expansion Along the Western <span>Antarctic</span> <span>Peninsula</span>.”</span> <em>Marine Ecology Progress Series</em> 787: 1–19. <a href="https://doi.org/10.3354/meps15149">https://doi.org/10.3354/meps15149</a>.
 </div>
 </div>
-</section>
 </section>
 
 </main> <!-- /main -->
@@ -706,10 +716,13 @@ Wethington, Michael, and Heather J. Lynch. 2026. <span>“Winter Sea-Ice Decline
   </script>
 <nav class="page-navigation">
   <div class="nav-page nav-page-previous">
+      <a href="../chapters/08-using-harmonized.html" class="pagination-link" aria-label="Using the harmonized dataset">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Using the harmonized dataset</span></span>
+      </a>          
   </div>
   <div class="nav-page nav-page-next">
-      <a href="./chapters/01-setup.html" class="pagination-link" aria-label="Setup and the problem">
-        <span class="nav-page-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Setup and the problem</span></span> <i class="bi bi-arrow-right-short"></i>
+      <a href="../references.html" class="pagination-link" aria-label="References">
+        <span class="nav-page-text">References</span> <i class="bi bi-arrow-right-short"></i>
       </a>
   </div>
 </nav>
@@ -718,4 +731,4 @@ Wethington, Michael, and Heather J. Lynch. 2026. <span>“Winter Sea-Ice Decline
 
 
 
-<footer class="footer"><div class="nav-footer"><div class="nav-footer-center"><div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/M-Fox-Wethington/Sea-Ice-Dataset-Harmonization-Tutorial/edit/main/index.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/M-Fox-Wethington/Sea-Ice-Dataset-Harmonization-Tutorial/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></div></div></footer></body></html>
+<footer class="footer"><div class="nav-footer"><div class="nav-footer-center"><div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/M-Fox-Wethington/Sea-Ice-Dataset-Harmonization-Tutorial/edit/main/chapters/09-scaling-up.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/M-Fox-Wethington/Sea-Ice-Dataset-Harmonization-Tutorial/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></div></div></footer></body></html>

@@ -6,10 +6,8 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
-<meta name="author" content="Michael Wethington">
-<meta name="dcterms.date" content="2026-06-25">
 
-<title>Harmonizing Antarctic Sea-Ice Datasets</title>
+<title>2&nbsp; Getting the data from NSIDC – Harmonizing Antarctic Sea-Ice Datasets</title>
 <style>
 /* Default styles provided by pandoc.
 ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
@@ -25,46 +23,63 @@ ul.task-list li input[type="checkbox"] {
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
 }
-/* CSS for citations */
-div.csl-bib-body { }
-div.csl-entry {
-  clear: both;
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
 }
-.hanging-indent div.csl-entry {
-  margin-left:2em;
-  text-indent:-2em;
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
 }
-div.csl-left-margin {
-  min-width:2em;
-  float:left;
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
 }
-div.csl-right-inline {
-  margin-left:2em;
-  padding-left:1em;
-}
-div.csl-indent {
-  margin-left: 2em;
-}</style>
+</style>
 
 
-<script src="site_libs/quarto-nav/quarto-nav.js"></script>
-<script src="site_libs/quarto-nav/headroom.min.js"></script>
-<script src="site_libs/clipboard/clipboard.min.js"></script>
-<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
-<script src="site_libs/quarto-search/fuse.min.js"></script>
-<script src="site_libs/quarto-search/quarto-search.js"></script>
-<meta name="quarto:offset" content="./">
-<link href="./chapters/01-setup.html" rel="next">
-<script src="site_libs/quarto-html/quarto.js" type="module"></script>
-<script src="site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
-<script src="site_libs/quarto-html/popper.min.js"></script>
-<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
-<script src="site_libs/quarto-html/anchor.min.js"></script>
-<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="site_libs/quarto-html/quarto-syntax-highlighting-15634bcf2e68342d4ad2dfa704d543f6.css" rel="stylesheet" id="quarto-text-highlighting-styles">
-<script src="site_libs/bootstrap/bootstrap.min.js"></script>
-<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="site_libs/bootstrap/bootstrap-b46251e7dcf17699132ee8d5ea3a66e5.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script src="../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../">
+<link href="../chapters/03-ingestion.html" rel="next">
+<link href="../chapters/01-setup.html" rel="prev">
+<script src="../site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="../site_libs/quarto-html/popper.min.js"></script>
+<script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-15634bcf2e68342d4ad2dfa704d543f6.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../site_libs/bootstrap/bootstrap-b46251e7dcf17699132ee8d5ea3a66e5.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "sidebar",
   "copy-button": false,
@@ -105,7 +120,7 @@ div.csl-indent {
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./index.html">Overview</a></li></ol></nav>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../chapters/02-getting-data.html"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Getting the data from NSIDC</span></a></li></ol></nav>
         <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
       <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
@@ -120,7 +135,7 @@ div.csl-indent {
   <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation docked overflow-auto">
     <div class="pt-lg-2 mt-2 text-left sidebar-header">
     <div class="sidebar-title mb-0 py-0">
-      <a href="./">Harmonizing Antarctic Sea-Ice Datasets</a> 
+      <a href="../">Harmonizing Antarctic Sea-Ice Datasets</a> 
         <div class="sidebar-tools-main">
     <a href="https://github.com/M-Fox-Wethington/Sea-Ice-Dataset-Harmonization-Tutorial" title="Source Code" class="quarto-navigation-tool px-1" aria-label="Source Code"><i class="bi bi-github"></i></a>
 </div>
@@ -135,67 +150,67 @@ div.csl-indent {
     <ul class="list-unstyled mt-1">
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./index.html" class="sidebar-item-text sidebar-link active">
+  <a href="../index.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Overview</span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./chapters/01-setup.html" class="sidebar-item-text sidebar-link">
+  <a href="../chapters/01-setup.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Setup and the problem</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./chapters/02-getting-data.html" class="sidebar-item-text sidebar-link">
+  <a href="../chapters/02-getting-data.html" class="sidebar-item-text sidebar-link active">
  <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Getting the data from NSIDC</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./chapters/03-ingestion.html" class="sidebar-item-text sidebar-link">
+  <a href="../chapters/03-ingestion.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Ingestion: from native files to analysis-ready clips</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./chapters/04-land-mask.html" class="sidebar-item-text sidebar-link">
+  <a href="../chapters/04-land-mask.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Building the land mask</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./chapters/05-align-and-pair.html" class="sidebar-item-text sidebar-link">
+  <a href="../chapters/05-align-and-pair.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Aligning and pairing the two products</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./chapters/06-train-ann.html" class="sidebar-item-text sidebar-link">
+  <a href="../chapters/06-train-ann.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Training the transfer model</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./chapters/07-deploy-and-validate.html" class="sidebar-item-text sidebar-link">
+  <a href="../chapters/07-deploy-and-validate.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Deploying and validating</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./chapters/08-using-harmonized.html" class="sidebar-item-text sidebar-link">
+  <a href="../chapters/08-using-harmonized.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Using the harmonized dataset</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./chapters/09-scaling-up.html" class="sidebar-item-text sidebar-link">
+  <a href="../chapters/09-scaling-up.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Scaling up and adapting the method</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./references.html" class="sidebar-item-text sidebar-link">
+  <a href="../references.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">References</span></a>
   </div>
 </li>
@@ -209,45 +224,30 @@ div.csl-indent {
     <h2 id="toc-title">Table of contents</h2>
    
   <ul>
-  <li><a href="#overview" id="toc-overview" class="nav-link active" data-scroll-target="#overview">Overview</a>
-  <ul class="collapse">
-  <li><a href="#the-problem-this-solves" id="toc-the-problem-this-solves" class="nav-link" data-scroll-target="#the-problem-this-solves">The problem this solves</a></li>
-  <li><a href="#what-you-will-build" id="toc-what-you-will-build" class="nav-link" data-scroll-target="#what-you-will-build">What you will build</a></li>
-  <li><a href="#the-method-in-brief" id="toc-the-method-in-brief" class="nav-link" data-scroll-target="#the-method-in-brief">The method in brief</a></li>
-  <li><a href="#who-this-is-for" id="toc-who-this-is-for" class="nav-link" data-scroll-target="#who-this-is-for">Who this is for</a></li>
-  <li><a href="#how-the-data-works" id="toc-how-the-data-works" class="nav-link" data-scroll-target="#how-the-data-works">How the data works</a></li>
-  <li><a href="#scope" id="toc-scope" class="nav-link" data-scroll-target="#scope">Scope</a></li>
-  <li><a href="#citation-and-reuse" id="toc-citation-and-reuse" class="nav-link" data-scroll-target="#citation-and-reuse">Citation and reuse</a></li>
-  </ul></li>
+  <li><a href="#which-product-needs-a-login" id="toc-which-product-needs-a-login" class="nav-link active" data-scroll-target="#which-product-needs-a-login"><span class="header-section-number">2.1</span> Which product needs a login</a></li>
+  <li><a href="#set-up-earthdata-authentication" id="toc-set-up-earthdata-authentication" class="nav-link" data-scroll-target="#set-up-earthdata-authentication"><span class="header-section-number">2.2</span> Set up Earthdata authentication</a></li>
+  <li><a href="#download-amsr-au_si12" id="toc-download-amsr-au_si12" class="nav-link" data-scroll-target="#download-amsr-au_si12"><span class="header-section-number">2.3</span> Download AMSR (AU_SI12)</a></li>
+  <li><a href="#download-sea-ice-index-g02135" id="toc-download-sea-ice-index-g02135" class="nav-link" data-scroll-target="#download-sea-ice-index-g02135"><span class="header-section-number">2.4</span> Download Sea Ice Index (G02135)</a></li>
+  <li><a href="#a-manual-fallback" id="toc-a-manual-fallback" class="nav-link" data-scroll-target="#a-manual-fallback"><span class="header-section-number">2.5</span> A manual fallback</a></li>
+  <li><a href="#how-much-to-download" id="toc-how-much-to-download" class="nav-link" data-scroll-target="#how-much-to-download"><span class="header-section-number">2.6</span> How much to download</a></li>
+  <li><a href="#point-the-tutorial-at-your-download" id="toc-point-the-tutorial-at-your-download" class="nav-link" data-scroll-target="#point-the-tutorial-at-your-download"><span class="header-section-number">2.7</span> Point the tutorial at your download</a></li>
+  <li><a href="#if-you-work-in-python" id="toc-if-you-work-in-python" class="nav-link" data-scroll-target="#if-you-work-in-python"><span class="header-section-number">2.8</span> If you work in Python</a></li>
   </ul>
-<div class="toc-actions"><ul><li><a href="https://github.com/M-Fox-Wethington/Sea-Ice-Dataset-Harmonization-Tutorial/edit/main/index.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/M-Fox-Wethington/Sea-Ice-Dataset-Harmonization-Tutorial/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></nav>
+<div class="toc-actions"><ul><li><a href="https://github.com/M-Fox-Wethington/Sea-Ice-Dataset-Harmonization-Tutorial/edit/main/chapters/02-getting-data.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/M-Fox-Wethington/Sea-Ice-Dataset-Harmonization-Tutorial/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></nav>
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title">Harmonizing Antarctic Sea-Ice Datasets</h1>
-<p class="subtitle lead">A reproducible R tutorial for cross-sensor harmonization of passive-microwave sea-ice concentration</p>
+<h1 class="title"><span id="sec-getting-data" class="quarto-section-identifier"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Getting the data from NSIDC</span></span></h1>
 </div>
 
 
 
 <div class="quarto-title-meta">
 
-    <div>
-    <div class="quarto-title-meta-heading">Author</div>
-    <div class="quarto-title-meta-contents">
-             <p>Michael Wethington </p>
-          </div>
-  </div>
     
-    <div>
-    <div class="quarto-title-meta-heading">Published</div>
-    <div class="quarto-title-meta-contents">
-      <p class="date">June 25, 2026</p>
-    </div>
-  </div>
   
     
   </div>
@@ -257,50 +257,63 @@ div.csl-indent {
 </header>
 
 
-<section id="overview" class="level1 unnumbered">
-<h1 class="unnumbered">Overview</h1>
-<p>This tutorial shows how to combine two satellite sea-ice products that disagree on spatial resolution and time span into a single, internally consistent record you can analyze as one dataset. The worked example rebuilds the harmonized sea-ice dataset behind Wethington and Lynch <span class="citation" data-cites="wethington2026meps">(<a href="references.html#ref-wethington2026meps" role="doc-biblioref">Wethington and Lynch 2026</a>)</span>, but the method is general. It applies to any two gridded sea-ice concentration products that overlap in time, in either hemisphere.</p>
-<section id="the-problem-this-solves" class="level2">
-<h2 class="anchored" data-anchor-id="the-problem-this-solves">The problem this solves</h2>
-<p>Satellite passive microwave sensors have measured sea-ice concentration since 1979. Sea-ice concentration (hereafter SIC) is the fraction of a grid cell covered by ice, reported from 0 to 100 percent. Two facts about the satellite record are in tension. The long record is coarse: the U.S. National Snow and Ice Data Center (NSIDC) Sea Ice Index runs from 1979 to the present at 25 km resolution. The fine record is short: the Advanced Microwave Scanning Radiometer (AMSR) products resolve 12.5 km but only begin in the 2000s. Many analyses want both at once, the spatial detail of the fine product and the temporal depth of the coarse one.</p>
-<p>Harmonization bridges the two. Rather than splicing the records and accepting a discontinuity where the sensors change, we learn the relationship between the products during the years they overlap, then use that relationship to express the entire coarse record in terms of the fine one. The result is one continuous dataset whose values are consistent across the full period.</p>
+<p>You need this chapter only when you move beyond the bundled sample to build the real multi-decade dataset. The sample under <code>data/sample/</code> already contains post-ingestion clips, so if you are reading straight through you can skim this chapter and pick up the live work again in <a href="03-ingestion.html" class="quarto-xref"><span>Chapter 3</span></a>. Nothing here runs during the book build, because it requires credentials and downloads many gigabytes; every command is shown for you to run yourself.</p>
+<section id="which-product-needs-a-login" class="level2" data-number="2.1">
+<h2 data-number="2.1" class="anchored" data-anchor-id="which-product-needs-a-login"><span class="header-section-number">2.1</span> Which product needs a login</h2>
+<p>The two products are hosted differently, which affects how you fetch them.</p>
+<p>The AMSR product (AU_SI12) is distributed by the NASA National Snow and Ice Data Center Distributed Active Archive Center, and downloading it requires a free NASA Earthdata Login. Register once at <a href="https://urs.earthdata.nasa.gov" class="uri">https://urs.earthdata.nasa.gov</a>. The Sea Ice Index (G02135) is a NOAA-at-NSIDC product and is openly accessible over HTTPS, so it needs no account. The two access patterns below reflect that split.</p>
+<p>NSIDC has been migrating its archive to the Earthdata Cloud, so the exact host names change over time. The authoritative download recipe always lives on each product’s data page under its “Download Data” tab, and the patterns below are representative rather than guaranteed-current. Confirm the current URLs on the product pages: <a href="https://nsidc.org/data/au_si12/versions/1">AU_SI12</a> and <a href="https://nsidc.org/data/g02135">G02135</a>.</p>
 </section>
-<section id="what-you-will-build" class="level2">
-<h2 class="anchored" data-anchor-id="what-you-will-build">What you will build</h2>
-<p>By the end you will have produced a daily harmonized SIC dataset for the western Antarctic Peninsula spanning 1979 to 2023, expressed on the 12.5 km AMSR grid, together with the figures that validate it against the real AMSR observations over the overlap years. The final chapter then uses that dataset to compute the standard sea-ice metrics (extent, concentration, persistence, and duration) and to estimate a long-term winter trend.</p>
+<section id="set-up-earthdata-authentication" class="level2" data-number="2.2">
+<h2 data-number="2.2" class="anchored" data-anchor-id="set-up-earthdata-authentication"><span class="header-section-number">2.2</span> Set up Earthdata authentication</h2>
+<p>The standard way to authenticate a command-line download to NSIDC is a <code>.netrc</code> file holding your Earthdata credentials, which <code>wget</code> and <code>curl</code> read automatically. Create it in your home directory (the file is named <code>.netrc</code> on macOS and Linux, and <code>_netrc</code> on Windows):</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="bu">echo</span> <span class="st">"machine urs.earthdata.nasa.gov login YOUR_USERNAME password YOUR_PASSWORD"</span> <span class="op">&gt;&gt;</span> ~/.netrc</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">chmod</span> 600 ~/.netrc</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>The <code>chmod</code> matters on macOS and Linux, because <code>wget</code> refuses to read a <code>.netrc</code> that other users can see. On Windows the file permission step is unnecessary.</p>
 </section>
-<section id="the-method-in-brief" class="level2">
-<h2 class="anchored" data-anchor-id="the-method-in-brief">The method in brief</h2>
-<p>The core idea is a cross-sensor transfer function. We pair the coarse and fine products pixel by pixel and day by day over their overlapping years, train a model that predicts the fine-product SIC from the coarse-product SIC, and then apply that model to the full coarse record. Following the paper, the model is a small artificial neural network (ANN) fit with the <code>nnet</code> package. Because a one-input ANN invites the question of whether something simpler would do, we also fit a linear and a quantile-mapping baseline and compare them, so the choice of model is something you can see rather than take on faith.</p>
+<section id="download-amsr-au_si12" class="level2" data-number="2.3">
+<h2 data-number="2.3" class="anchored" data-anchor-id="download-amsr-au_si12"><span class="header-section-number">2.3</span> Download AMSR (AU_SI12)</h2>
+<p>Each daily AU_SI12 file is an HDF-EOS5 (<code>.he5</code>) granule that contains both polar grids; we read only the southern-hemisphere sea-ice concentration field in <a href="03-ingestion.html" class="quarto-xref"><span>Chapter 3</span></a>. The granules are organized into date subdirectories. A recursive <code>wget</code> that authenticates through your <code>.netrc</code> and keeps the session cookie looks like this:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Representative pattern. Copy the exact base URL from the AU_SI12 data page,</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="co"># which reflects the current Earthdata Cloud host.</span></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="fu">wget</span> <span class="at">--load-cookies</span> ~/.urs_cookies <span class="at">--save-cookies</span> ~/.urs_cookies <span class="dt">\</span></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>     <span class="at">--auth-no-challenge</span><span class="op">=</span>on <span class="at">--keep-session-cookies</span> <span class="dt">\</span></span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>     <span class="at">--no-check-certificate</span> <span class="dt">\</span></span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>     <span class="at">--recursive</span> <span class="at">--no-parent</span> <span class="at">--no-directories</span> <span class="dt">\</span></span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>     <span class="at">--accept</span> <span class="st">"AMSR_U2_L3_SeaIce12km_*.he5"</span> <span class="dt">\</span></span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>     <span class="at">--directory-prefix</span> data/full/amsr_raw <span class="dt">\</span></span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>     <span class="st">"https://n5eil01u.ecs.nsidc.org/AMSA/AU_SI12.001/2013.07.01/"</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>To pull a multi-year span, loop over the date directories, or use the full date-list download script that the data page generates for you once you select a temporal range.</p>
 </section>
-<section id="who-this-is-for" class="level2">
-<h2 class="anchored" data-anchor-id="who-this-is-for">Who this is for</h2>
-<p>You should be comfortable reading and running R and manipulating data frames. Prior geospatial experience helps but is not assumed; we explain each raster operation as it appears, using the <code>terra</code> package throughout. The statistics stay at the level of a regression and a small neural network, both of which we build up step by step.</p>
+<section id="download-sea-ice-index-g02135" class="level2" data-number="2.4">
+<h2 data-number="2.4" class="anchored" data-anchor-id="download-sea-ice-index-g02135"><span class="header-section-number">2.4</span> Download Sea Ice Index (G02135)</h2>
+<p>We use the southern-hemisphere daily concentration GeoTIFFs, the files named <code>S_YYYYMMDD_concentration_v3.0.tif</code>. They sit in a per-year directory tree and need no login:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb3"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Representative pattern; confirm the current host on the G02135 data page.</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="fu">wget</span> <span class="at">--recursive</span> <span class="at">--no-parent</span> <span class="at">--no-directories</span> <span class="dt">\</span></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>     <span class="at">--accept</span> <span class="st">"S_*_concentration_v3.0.tif"</span> <span class="dt">\</span></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>     <span class="at">--directory-prefix</span> data/full/nsidc_raw <span class="dt">\</span></span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>     <span class="st">"https://noaadata.apps.nsidc.org/NOAA/G02135/south/daily/geotiff/2013/"</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </section>
-<section id="how-the-data-works" class="level2">
-<h2 class="anchored" data-anchor-id="how-the-data-works">How the data works</h2>
-<p>The repository ships a small bundled sample under <code>data/sample/</code>, drawn from the real NSIDC products and clipped to the study area, so that every chapter runs end to end in a few minutes with no account and no large download. For real work you fetch the full products from NSIDC, which requires a free Earthdata login; <a href="chapters/02-getting-data.html" class="quarto-xref"><span>2&nbsp; Getting the data from NSIDC</span></a> walks through that. A single environment variable, <code>SIH_MODE</code>, switches the code between the bundled sample and your own full download, so the same chapters serve both the quick read-through and the production run.</p>
-<p>A few steps in the full pipeline are genuinely heavy, including the multi-decade download and the deployment of the trained model across the entire 1979 to 2023 record. Where that is the case, the chapter shows the code and the result it produced but does not re-run it during the site build. Each such block is labeled so you know what executes on the sample and what is shown frozen.</p>
+<section id="a-manual-fallback" class="level2" data-number="2.5">
+<h2 data-number="2.5" class="anchored" data-anchor-id="a-manual-fallback"><span class="header-section-number">2.5</span> A manual fallback</h2>
+<p>If the scripted download gives you trouble, both products can be fetched by hand. For AMSR, use <a href="https://search.earthdata.nasa.gov">Earthdata Search</a>, search for “AU_SI12”, draw your time range and a polygon over the Peninsula, and download the granules. For the Sea Ice Index, the data page’s “Download Data” tab links straight into the GeoTIFF directory tree you can browse and click through. Once the files are on disk, the rest of the tutorial treats them the same way regardless of how they arrived.</p>
 </section>
-<section id="scope" class="level2">
-<h2 class="anchored" data-anchor-id="scope">Scope</h2>
-<p>This tutorial covers the harmonization itself and the sea-ice analysis that immediately follows from it. It stops at sea-ice metrics and a trend example. The penguin population modeling that motivated the original paper is deliberately out of scope, so that the method stands on its own and transfers to other questions.</p>
+<section id="how-much-to-download" class="level2" data-number="2.6">
+<h2 data-number="2.6" class="anchored" data-anchor-id="how-much-to-download"><span class="header-section-number">2.6</span> How much to download</h2>
+<p>For the western Antarctic Peninsula example you need only the southern-hemisphere files. The Sea Ice Index daily GeoTIFFs are small, on the order of tens of kilobytes each, so the full 1979 to 2023 record is a few gigabytes. The AMSR granules are larger, because each holds the full hemisphere at 12.5 km in HDF5, so a decade of daily files runs to tens of gigabytes. You can reduce the footprint substantially by clipping to the study area as you ingest, which is what <a href="03-ingestion.html" class="quarto-xref"><span>Chapter 3</span></a> does.</p>
 </section>
-<section id="citation-and-reuse" class="level2">
-<h2 class="anchored" data-anchor-id="citation-and-reuse">Citation and reuse</h2>
-<p>If you use this tutorial or the harmonization method, please cite the paper:</p>
-<blockquote class="blockquote">
-<p>Wethington, M. and Lynch, H. J. (2026). Winter sea-ice decline drives gentoo penguin population expansion along the western Antarctic Peninsula. <em>Marine Ecology Progress Series</em> 787, 1-19. <a href="https://doi.org/10.3354/meps15149" class="uri">https://doi.org/10.3354/meps15149</a></p>
-</blockquote>
-<p>The code is released under the MIT License and the written content under CC BY 4.0. The source repository, including the original research code this tutorial is adapted from, is linked in the sidebar.</p>
+<section id="point-the-tutorial-at-your-download" class="level2" data-number="2.7">
+<h2 data-number="2.7" class="anchored" data-anchor-id="point-the-tutorial-at-your-download"><span class="header-section-number">2.7</span> Point the tutorial at your download</h2>
+<p>Once the raw files are in place and converted (<a href="03-ingestion.html" class="quarto-xref"><span>Chapter 3</span></a>), arrange the cleaned daily clips into the same layout the sample uses, an <code>amsr_12km/</code> directory and a <code>nsidc_25km_seaiceindex/</code> directory, then tell the code to use them:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="fu">Sys.setenv</span>(<span class="at">SIH_MODE =</span> <span class="st">"full"</span>)</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="fu">Sys.setenv</span>(<span class="at">SIH_DATA_ROOT =</span> <span class="st">"/path/to/your/data/full"</span>)</span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>paths <span class="ot">&lt;-</span> <span class="fu">sih_paths</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</section>
+<section id="if-you-work-in-python" class="level2" data-number="2.8">
+<h2 data-number="2.8" class="anchored" data-anchor-id="if-you-work-in-python"><span class="header-section-number">2.8</span> If you work in Python</h2>
+<p>NASA maintains <a href="https://earthaccess.readthedocs.io"><code>earthaccess</code></a>, a Python package that handles Earthdata authentication, search, and download in a few lines and is often the smoothest route for the AMSR granules. It is outside this R tutorial, but if Python is already part of your workflow it is worth knowing that you can do the fetch there and bring only the converted GeoTIFFs into R.</p>
 
 
-<div id="refs" class="references csl-bib-body hanging-indent" role="list" style="display: none">
-<div id="ref-wethington2026meps" class="csl-entry" role="listitem">
-Wethington, Michael, and Heather J. Lynch. 2026. <span>“Winter Sea-Ice Decline Drives Gentoo Penguin Population Expansion Along the Western <span>Antarctic</span> <span>Peninsula</span>.”</span> <em>Marine Ecology Progress Series</em> 787: 1–19. <a href="https://doi.org/10.3354/meps15149">https://doi.org/10.3354/meps15149</a>.
-</div>
-</div>
-</section>
 </section>
 
 </main> <!-- /main -->
@@ -706,10 +719,13 @@ Wethington, Michael, and Heather J. Lynch. 2026. <span>“Winter Sea-Ice Decline
   </script>
 <nav class="page-navigation">
   <div class="nav-page nav-page-previous">
+      <a href="../chapters/01-setup.html" class="pagination-link" aria-label="Setup and the problem">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Setup and the problem</span></span>
+      </a>          
   </div>
   <div class="nav-page nav-page-next">
-      <a href="./chapters/01-setup.html" class="pagination-link" aria-label="Setup and the problem">
-        <span class="nav-page-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Setup and the problem</span></span> <i class="bi bi-arrow-right-short"></i>
+      <a href="../chapters/03-ingestion.html" class="pagination-link" aria-label="Ingestion: from native files to analysis-ready clips">
+        <span class="nav-page-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Ingestion: from native files to analysis-ready clips</span></span> <i class="bi bi-arrow-right-short"></i>
       </a>
   </div>
 </nav>
@@ -718,4 +734,4 @@ Wethington, Michael, and Heather J. Lynch. 2026. <span>“Winter Sea-Ice Decline
 
 
 
-<footer class="footer"><div class="nav-footer"><div class="nav-footer-center"><div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/M-Fox-Wethington/Sea-Ice-Dataset-Harmonization-Tutorial/edit/main/index.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/M-Fox-Wethington/Sea-Ice-Dataset-Harmonization-Tutorial/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></div></div></footer></body></html>
+<footer class="footer"><div class="nav-footer"><div class="nav-footer-center"><div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/M-Fox-Wethington/Sea-Ice-Dataset-Harmonization-Tutorial/edit/main/chapters/02-getting-data.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/M-Fox-Wethington/Sea-Ice-Dataset-Harmonization-Tutorial/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></div></div></footer></body></html>

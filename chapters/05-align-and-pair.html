@@ -6,10 +6,8 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
-<meta name="author" content="Michael Wethington">
-<meta name="dcterms.date" content="2026-06-25">
 
-<title>Harmonizing Antarctic Sea-Ice Datasets</title>
+<title>5&nbsp; Aligning and pairing the two products – Harmonizing Antarctic Sea-Ice Datasets</title>
 <style>
 /* Default styles provided by pandoc.
 ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
@@ -25,46 +23,63 @@ ul.task-list li input[type="checkbox"] {
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
 }
-/* CSS for citations */
-div.csl-bib-body { }
-div.csl-entry {
-  clear: both;
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
 }
-.hanging-indent div.csl-entry {
-  margin-left:2em;
-  text-indent:-2em;
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
 }
-div.csl-left-margin {
-  min-width:2em;
-  float:left;
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
 }
-div.csl-right-inline {
-  margin-left:2em;
-  padding-left:1em;
-}
-div.csl-indent {
-  margin-left: 2em;
-}</style>
+</style>
 
 
-<script src="site_libs/quarto-nav/quarto-nav.js"></script>
-<script src="site_libs/quarto-nav/headroom.min.js"></script>
-<script src="site_libs/clipboard/clipboard.min.js"></script>
-<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
-<script src="site_libs/quarto-search/fuse.min.js"></script>
-<script src="site_libs/quarto-search/quarto-search.js"></script>
-<meta name="quarto:offset" content="./">
-<link href="./chapters/01-setup.html" rel="next">
-<script src="site_libs/quarto-html/quarto.js" type="module"></script>
-<script src="site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
-<script src="site_libs/quarto-html/popper.min.js"></script>
-<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
-<script src="site_libs/quarto-html/anchor.min.js"></script>
-<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="site_libs/quarto-html/quarto-syntax-highlighting-15634bcf2e68342d4ad2dfa704d543f6.css" rel="stylesheet" id="quarto-text-highlighting-styles">
-<script src="site_libs/bootstrap/bootstrap.min.js"></script>
-<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="site_libs/bootstrap/bootstrap-b46251e7dcf17699132ee8d5ea3a66e5.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script src="../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../">
+<link href="../chapters/06-train-ann.html" rel="next">
+<link href="../chapters/04-land-mask.html" rel="prev">
+<script src="../site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="../site_libs/quarto-html/popper.min.js"></script>
+<script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-15634bcf2e68342d4ad2dfa704d543f6.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../site_libs/bootstrap/bootstrap-b46251e7dcf17699132ee8d5ea3a66e5.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "sidebar",
   "copy-button": false,
@@ -105,7 +120,7 @@ div.csl-indent {
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./index.html">Overview</a></li></ol></nav>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../chapters/05-align-and-pair.html"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Aligning and pairing the two products</span></a></li></ol></nav>
         <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
       <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
@@ -120,7 +135,7 @@ div.csl-indent {
   <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation docked overflow-auto">
     <div class="pt-lg-2 mt-2 text-left sidebar-header">
     <div class="sidebar-title mb-0 py-0">
-      <a href="./">Harmonizing Antarctic Sea-Ice Datasets</a> 
+      <a href="../">Harmonizing Antarctic Sea-Ice Datasets</a> 
         <div class="sidebar-tools-main">
     <a href="https://github.com/M-Fox-Wethington/Sea-Ice-Dataset-Harmonization-Tutorial" title="Source Code" class="quarto-navigation-tool px-1" aria-label="Source Code"><i class="bi bi-github"></i></a>
 </div>
@@ -135,67 +150,67 @@ div.csl-indent {
     <ul class="list-unstyled mt-1">
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./index.html" class="sidebar-item-text sidebar-link active">
+  <a href="../index.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Overview</span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./chapters/01-setup.html" class="sidebar-item-text sidebar-link">
+  <a href="../chapters/01-setup.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Setup and the problem</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./chapters/02-getting-data.html" class="sidebar-item-text sidebar-link">
+  <a href="../chapters/02-getting-data.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Getting the data from NSIDC</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./chapters/03-ingestion.html" class="sidebar-item-text sidebar-link">
+  <a href="../chapters/03-ingestion.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Ingestion: from native files to analysis-ready clips</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./chapters/04-land-mask.html" class="sidebar-item-text sidebar-link">
+  <a href="../chapters/04-land-mask.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Building the land mask</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./chapters/05-align-and-pair.html" class="sidebar-item-text sidebar-link">
+  <a href="../chapters/05-align-and-pair.html" class="sidebar-item-text sidebar-link active">
  <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Aligning and pairing the two products</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./chapters/06-train-ann.html" class="sidebar-item-text sidebar-link">
+  <a href="../chapters/06-train-ann.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Training the transfer model</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./chapters/07-deploy-and-validate.html" class="sidebar-item-text sidebar-link">
+  <a href="../chapters/07-deploy-and-validate.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Deploying and validating</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./chapters/08-using-harmonized.html" class="sidebar-item-text sidebar-link">
+  <a href="../chapters/08-using-harmonized.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Using the harmonized dataset</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./chapters/09-scaling-up.html" class="sidebar-item-text sidebar-link">
+  <a href="../chapters/09-scaling-up.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Scaling up and adapting the method</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./references.html" class="sidebar-item-text sidebar-link">
+  <a href="../references.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">References</span></a>
   </div>
 </li>
@@ -209,45 +224,26 @@ div.csl-indent {
     <h2 id="toc-title">Table of contents</h2>
    
   <ul>
-  <li><a href="#overview" id="toc-overview" class="nav-link active" data-scroll-target="#overview">Overview</a>
-  <ul class="collapse">
-  <li><a href="#the-problem-this-solves" id="toc-the-problem-this-solves" class="nav-link" data-scroll-target="#the-problem-this-solves">The problem this solves</a></li>
-  <li><a href="#what-you-will-build" id="toc-what-you-will-build" class="nav-link" data-scroll-target="#what-you-will-build">What you will build</a></li>
-  <li><a href="#the-method-in-brief" id="toc-the-method-in-brief" class="nav-link" data-scroll-target="#the-method-in-brief">The method in brief</a></li>
-  <li><a href="#who-this-is-for" id="toc-who-this-is-for" class="nav-link" data-scroll-target="#who-this-is-for">Who this is for</a></li>
-  <li><a href="#how-the-data-works" id="toc-how-the-data-works" class="nav-link" data-scroll-target="#how-the-data-works">How the data works</a></li>
-  <li><a href="#scope" id="toc-scope" class="nav-link" data-scroll-target="#scope">Scope</a></li>
-  <li><a href="#citation-and-reuse" id="toc-citation-and-reuse" class="nav-link" data-scroll-target="#citation-and-reuse">Citation and reuse</a></li>
-  </ul></li>
+  <li><a href="#putting-both-products-on-one-grid" id="toc-putting-both-products-on-one-grid" class="nav-link active" data-scroll-target="#putting-both-products-on-one-grid"><span class="header-section-number">5.1</span> Putting both products on one grid</a></li>
+  <li><a href="#restricting-to-shared-dates" id="toc-restricting-to-shared-dates" class="nav-link" data-scroll-target="#restricting-to-shared-dates"><span class="header-section-number">5.2</span> Restricting to shared dates</a></li>
+  <li><a href="#pairing-pixel-by-pixel" id="toc-pairing-pixel-by-pixel" class="nav-link" data-scroll-target="#pairing-pixel-by-pixel"><span class="header-section-number">5.3</span> Pairing pixel by pixel</a></li>
+  <li><a href="#the-relationship-to-be-learned" id="toc-the-relationship-to-be-learned" class="nav-link" data-scroll-target="#the-relationship-to-be-learned"><span class="header-section-number">5.4</span> The relationship to be learned</a></li>
   </ul>
-<div class="toc-actions"><ul><li><a href="https://github.com/M-Fox-Wethington/Sea-Ice-Dataset-Harmonization-Tutorial/edit/main/index.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/M-Fox-Wethington/Sea-Ice-Dataset-Harmonization-Tutorial/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></nav>
+<div class="toc-actions"><ul><li><a href="https://github.com/M-Fox-Wethington/Sea-Ice-Dataset-Harmonization-Tutorial/edit/main/chapters/05-align-and-pair.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/M-Fox-Wethington/Sea-Ice-Dataset-Harmonization-Tutorial/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></nav>
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title">Harmonizing Antarctic Sea-Ice Datasets</h1>
-<p class="subtitle lead">A reproducible R tutorial for cross-sensor harmonization of passive-microwave sea-ice concentration</p>
+<h1 class="title"><span id="sec-align" class="quarto-section-identifier"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Aligning and pairing the two products</span></span></h1>
 </div>
 
 
 
 <div class="quarto-title-meta">
 
-    <div>
-    <div class="quarto-title-meta-heading">Author</div>
-    <div class="quarto-title-meta-contents">
-             <p>Michael Wethington </p>
-          </div>
-  </div>
     
-    <div>
-    <div class="quarto-title-meta-heading">Published</div>
-    <div class="quarto-title-meta-contents">
-      <p class="date">June 25, 2026</p>
-    </div>
-  </div>
   
     
   </div>
@@ -257,50 +253,111 @@ div.csl-indent {
 </header>
 
 
-<section id="overview" class="level1 unnumbered">
-<h1 class="unnumbered">Overview</h1>
-<p>This tutorial shows how to combine two satellite sea-ice products that disagree on spatial resolution and time span into a single, internally consistent record you can analyze as one dataset. The worked example rebuilds the harmonized sea-ice dataset behind Wethington and Lynch <span class="citation" data-cites="wethington2026meps">(<a href="references.html#ref-wethington2026meps" role="doc-biblioref">Wethington and Lynch 2026</a>)</span>, but the method is general. It applies to any two gridded sea-ice concentration products that overlap in time, in either hemisphere.</p>
-<section id="the-problem-this-solves" class="level2">
-<h2 class="anchored" data-anchor-id="the-problem-this-solves">The problem this solves</h2>
-<p>Satellite passive microwave sensors have measured sea-ice concentration since 1979. Sea-ice concentration (hereafter SIC) is the fraction of a grid cell covered by ice, reported from 0 to 100 percent. Two facts about the satellite record are in tension. The long record is coarse: the U.S. National Snow and Ice Data Center (NSIDC) Sea Ice Index runs from 1979 to the present at 25 km resolution. The fine record is short: the Advanced Microwave Scanning Radiometer (AMSR) products resolve 12.5 km but only begin in the 2000s. Many analyses want both at once, the spatial detail of the fine product and the temporal depth of the coarse one.</p>
-<p>Harmonization bridges the two. Rather than splicing the records and accepting a discontinuity where the sensors change, we learn the relationship between the products during the years they overlap, then use that relationship to express the entire coarse record in terms of the fine one. The result is one continuous dataset whose values are consistent across the full period.</p>
+<p>To learn how the coarse product relates to the fine one, we need to compare them cell for cell on the same days. That requires three things: the two stacks on one grid, restricted to the dates they share, and then flattened into a table with one row per pixel per day. This chapter does all three and ends with a picture of the relationship the model will learn.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">source</span>(here<span class="sc">::</span><span class="fu">here</span>(<span class="st">"R"</span>, <span class="st">"setup.R"</span>))</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>paths <span class="ot">&lt;-</span> <span class="fu">sih_paths</span>()</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>amsr  <span class="ot">&lt;-</span> <span class="fu">load_sic_stack</span>(paths<span class="sc">$</span>amsr_dir)</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>nsidc <span class="ot">&lt;-</span> <span class="fu">load_sic_stack</span>(paths<span class="sc">$</span>nsidc_dir)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<section id="putting-both-products-on-one-grid" class="level2" data-number="5.1">
+<h2 data-number="5.1" class="anchored" data-anchor-id="putting-both-products-on-one-grid"><span class="header-section-number">5.1</span> Putting both products on one grid</h2>
+<p>Both products already share a projection (EPSG:3976), so there is no reprojection to do. What differs is the grid: AMSR is 12.5 km and the Sea Ice Index is 25 km, and their extents differ slightly. We resample the coarse product onto the fine grid with bilinear interpolation, which is appropriate for a smoothly varying field like concentration. The fine AMSR grid is the target, so AMSR itself is never altered.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>nsidc_aligned <span class="ot">&lt;-</span> <span class="fu">align_products</span>(<span class="at">fine =</span> amsr, <span class="at">coarse =</span> nsidc)</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="fu">rbind</span>(</span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">amsr          =</span> <span class="fu">dim</span>(amsr),</span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">nsidc_raw     =</span> <span class="fu">dim</span>(nsidc),</span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">nsidc_aligned =</span> <span class="fu">dim</span>(nsidc_aligned)</span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>              [,1] [,2] [,3]
+amsr           175  128   91
+nsidc_raw       91   68   91
+nsidc_aligned  175  128   91</code></pre>
+</div>
+</div>
+<p>The aligned coarse stack now has the same number of rows, columns, and layers as AMSR, so the two line up cell for cell.</p>
+<p>This step is worth a comment, because it is the one place where this tutorial departs from the published research notebook. In that notebook the line that resamples the coarse product to 12.5 km was commented out, so the network was trained and applied on the native 25 km grid and the “12.5 km” in the output name described alignment with the AMSR extent rather than the actual cell size. We make the resample explicit, so the harmonized product genuinely sits on the 12.5 km grid and the label is accurate. The transfer function the network learns is a per-pixel value mapping either way; resampling first simply means the output grid is the fine one.</p>
 </section>
-<section id="what-you-will-build" class="level2">
-<h2 class="anchored" data-anchor-id="what-you-will-build">What you will build</h2>
-<p>By the end you will have produced a daily harmonized SIC dataset for the western Antarctic Peninsula spanning 1979 to 2023, expressed on the 12.5 km AMSR grid, together with the figures that validate it against the real AMSR observations over the overlap years. The final chapter then uses that dataset to compute the standard sea-ice metrics (extent, concentration, persistence, and duration) and to estimate a long-term winter trend.</p>
-</section>
-<section id="the-method-in-brief" class="level2">
-<h2 class="anchored" data-anchor-id="the-method-in-brief">The method in brief</h2>
-<p>The core idea is a cross-sensor transfer function. We pair the coarse and fine products pixel by pixel and day by day over their overlapping years, train a model that predicts the fine-product SIC from the coarse-product SIC, and then apply that model to the full coarse record. Following the paper, the model is a small artificial neural network (ANN) fit with the <code>nnet</code> package. Because a one-input ANN invites the question of whether something simpler would do, we also fit a linear and a quantile-mapping baseline and compare them, so the choice of model is something you can see rather than take on faith.</p>
-</section>
-<section id="who-this-is-for" class="level2">
-<h2 class="anchored" data-anchor-id="who-this-is-for">Who this is for</h2>
-<p>You should be comfortable reading and running R and manipulating data frames. Prior geospatial experience helps but is not assumed; we explain each raster operation as it appears, using the <code>terra</code> package throughout. The statistics stay at the level of a regression and a small neural network, both of which we build up step by step.</p>
-</section>
-<section id="how-the-data-works" class="level2">
-<h2 class="anchored" data-anchor-id="how-the-data-works">How the data works</h2>
-<p>The repository ships a small bundled sample under <code>data/sample/</code>, drawn from the real NSIDC products and clipped to the study area, so that every chapter runs end to end in a few minutes with no account and no large download. For real work you fetch the full products from NSIDC, which requires a free Earthdata login; <a href="chapters/02-getting-data.html" class="quarto-xref"><span>2&nbsp; Getting the data from NSIDC</span></a> walks through that. A single environment variable, <code>SIH_MODE</code>, switches the code between the bundled sample and your own full download, so the same chapters serve both the quick read-through and the production run.</p>
-<p>A few steps in the full pipeline are genuinely heavy, including the multi-decade download and the deployment of the trained model across the entire 1979 to 2023 record. Where that is the case, the chapter shows the code and the result it produced but does not re-run it during the site build. Each such block is labeled so you know what executes on the sample and what is shown frozen.</p>
-</section>
-<section id="scope" class="level2">
-<h2 class="anchored" data-anchor-id="scope">Scope</h2>
-<p>This tutorial covers the harmonization itself and the sea-ice analysis that immediately follows from it. It stops at sea-ice metrics and a trend example. The penguin population modeling that motivated the original paper is deliberately out of scope, so that the method stands on its own and transfers to other questions.</p>
-</section>
-<section id="citation-and-reuse" class="level2">
-<h2 class="anchored" data-anchor-id="citation-and-reuse">Citation and reuse</h2>
-<p>If you use this tutorial or the harmonization method, please cite the paper:</p>
-<blockquote class="blockquote">
-<p>Wethington, M. and Lynch, H. J. (2026). Winter sea-ice decline drives gentoo penguin population expansion along the western Antarctic Peninsula. <em>Marine Ecology Progress Series</em> 787, 1-19. <a href="https://doi.org/10.3354/meps15149" class="uri">https://doi.org/10.3354/meps15149</a></p>
-</blockquote>
-<p>The code is released under the MIT License and the written content under CC BY 4.0. The source repository, including the original research code this tutorial is adapted from, is linked in the sidebar.</p>
-
-
-<div id="refs" class="references csl-bib-body hanging-indent" role="list" style="display: none">
-<div id="ref-wethington2026meps" class="csl-entry" role="listitem">
-Wethington, Michael, and Heather J. Lynch. 2026. <span>“Winter Sea-Ice Decline Drives Gentoo Penguin Population Expansion Along the Western <span>Antarctic</span> <span>Peninsula</span>.”</span> <em>Marine Ecology Progress Series</em> 787: 1–19. <a href="https://doi.org/10.3354/meps15149">https://doi.org/10.3354/meps15149</a>.
+<section id="restricting-to-shared-dates" class="level2" data-number="5.2">
+<h2 data-number="5.2" class="anchored" data-anchor-id="restricting-to-shared-dates"><span class="header-section-number">5.2</span> Restricting to shared dates</h2>
+<p>In general the two records only overlap for part of their span, so we pair on the dates they share. The helper <code>stack_dates()</code> returns each stack’s layer dates, and we keep the intersection. In the bundled sample the two products were built on the same 91 days, so all of them match, but the pattern is the one you would use on the full records where the overlap is a subset.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>ad <span class="ot">&lt;-</span> <span class="fu">stack_dates</span>(amsr)</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>nd <span class="ot">&lt;-</span> <span class="fu">stack_dates</span>(nsidc_aligned)</span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>common <span class="ot">&lt;-</span> <span class="fu">as.Date</span>(<span class="fu">intersect</span>(ad, nd), <span class="at">origin =</span> <span class="st">"1970-01-01"</span>)</span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>amsr_ov  <span class="ot">&lt;-</span> amsr[[<span class="fu">which</span>(ad <span class="sc">%in%</span> common)]]</span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>nsidc_ov <span class="ot">&lt;-</span> nsidc_aligned[[<span class="fu">which</span>(nd <span class="sc">%in%</span> common)]]</span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a><span class="fu">length</span>(common)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 91</code></pre>
 </div>
 </div>
 </section>
+<section id="pairing-pixel-by-pixel" class="level2" data-number="5.3">
+<h2 data-number="5.3" class="anchored" data-anchor-id="pairing-pixel-by-pixel"><span class="header-section-number">5.3</span> Pairing pixel by pixel</h2>
+<p>Now flatten both stacks into a single table. <code>build_pairs()</code> reads the two stacks in the same cell-and-layer order, drops any pixel that is <code>NA</code> in either (land and missing data), and returns a data frame with one row per ocean pixel per shared day.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>pairs <span class="ot">&lt;-</span> <span class="fu">build_pairs</span>(<span class="at">fine =</span> amsr_ov, <span class="at">coarse_aligned =</span> nsidc_ov)</span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="fu">nrow</span>(pairs)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 1790771</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(pairs)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>  nsidc amsr
+1     0    0
+2     0    0
+3     0    0
+4     0    0
+5     0    0
+6     0    0</code></pre>
+</div>
+</div>
+<p>That is a large training table from a modest amount of data: even this single year of every-fourth-day sampling yields well over a million paired observations, because each day contributes thousands of ocean pixels.</p>
+</section>
+<section id="the-relationship-to-be-learned" class="level2" data-number="5.4">
+<h2 data-number="5.4" class="anchored" data-anchor-id="the-relationship-to-be-learned"><span class="header-section-number">5.4</span> The relationship to be learned</h2>
+<p>Plotting the paired values against each other shows why harmonization is needed and what the model has to do. If the two products agreed perfectly, every point would fall on the dashed one-to-one line. They do not: the coarse Sea Ice Index and the fine AMSR systematically disagree, especially at intermediate concentrations near the ice edge, where the coarser footprint mixes ice and open water differently.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(pairs, <span class="fu">aes</span>(nsidc, amsr)) <span class="sc">+</span></span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_bin2d</span>(<span class="at">bins =</span> <span class="dv">80</span>) <span class="sc">+</span></span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_fill_gradientn</span>(<span class="at">colours =</span> <span class="fu">c</span>(<span class="st">"#deebf7"</span>, <span class="st">"#6baed6"</span>, <span class="st">"#2171b5"</span>, <span class="st">"#08306b"</span>),</span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>                       <span class="at">trans =</span> <span class="st">"log10"</span>, <span class="at">name =</span> <span class="st">"pixels"</span>) <span class="sc">+</span></span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_abline</span>(<span class="at">slope =</span> <span class="dv">1</span>, <span class="at">intercept =</span> <span class="dv">0</span>, <span class="at">linetype =</span> <span class="st">"dashed"</span>, <span class="at">color =</span> COLORS<span class="sc">$</span>accent_red) <span class="sc">+</span></span>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">coord_equal</span>(<span class="at">xlim =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">1</span>), <span class="at">ylim =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">1</span>)) <span class="sc">+</span></span>
+<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Sea Ice Index vs AMSR, paired pixels"</span>,</span>
+<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a>       <span class="at">x =</span> <span class="st">"Sea Ice Index (25 km), SIC"</span>, <span class="at">y =</span> <span class="st">"AMSR (12.5 km), SIC"</span>) <span class="sc">+</span></span>
+<span id="cb10-9"><a href="#cb10-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_bri</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div id="fig-relationship" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-relationship-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="05-align-and-pair_files/figure-html/fig-relationship-1.png" class="img-fluid figure-img" width="900">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-relationship-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;5.1: The paired relationship the model will learn, as a 2D density of the roughly 1.8 million paired pixels. The dashed line is one-to-one (perfect agreement). The cloud’s departure from it, strongest at mid-range concentrations, is the cross-sensor bias the transfer function corrects.
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<p>A quick numerical summary confirms the eye: the two products are strongly correlated but not identical, and the coarse product carries a small mean offset relative to the fine one.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="fu">c</span>(<span class="at">correlation   =</span> <span class="fu">cor</span>(pairs<span class="sc">$</span>nsidc, pairs<span class="sc">$</span>amsr),</span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">mean_bias     =</span> <span class="fu">mean</span>(pairs<span class="sc">$</span>nsidc <span class="sc">-</span> pairs<span class="sc">$</span>amsr),</span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">rmse_raw      =</span> <span class="fu">sqrt</span>(<span class="fu">mean</span>((pairs<span class="sc">$</span>nsidc <span class="sc">-</span> pairs<span class="sc">$</span>amsr)<span class="sc">^</span><span class="dv">2</span>)))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>correlation   mean_bias    rmse_raw 
+ 0.96820496 -0.06927442  0.14655607 </code></pre>
+</div>
+</div>
+<p>The next chapter fits a model to this relationship and asks whether a neural network does better than a straight line.</p>
+
+
 </section>
 
 </main> <!-- /main -->
@@ -706,10 +763,13 @@ Wethington, Michael, and Heather J. Lynch. 2026. <span>“Winter Sea-Ice Decline
   </script>
 <nav class="page-navigation">
   <div class="nav-page nav-page-previous">
+      <a href="../chapters/04-land-mask.html" class="pagination-link" aria-label="Building the land mask">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Building the land mask</span></span>
+      </a>          
   </div>
   <div class="nav-page nav-page-next">
-      <a href="./chapters/01-setup.html" class="pagination-link" aria-label="Setup and the problem">
-        <span class="nav-page-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Setup and the problem</span></span> <i class="bi bi-arrow-right-short"></i>
+      <a href="../chapters/06-train-ann.html" class="pagination-link" aria-label="Training the transfer model">
+        <span class="nav-page-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Training the transfer model</span></span> <i class="bi bi-arrow-right-short"></i>
       </a>
   </div>
 </nav>
@@ -718,4 +778,4 @@ Wethington, Michael, and Heather J. Lynch. 2026. <span>“Winter Sea-Ice Decline
 
 
 
-<footer class="footer"><div class="nav-footer"><div class="nav-footer-center"><div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/M-Fox-Wethington/Sea-Ice-Dataset-Harmonization-Tutorial/edit/main/index.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/M-Fox-Wethington/Sea-Ice-Dataset-Harmonization-Tutorial/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></div></div></footer></body></html>
+<footer class="footer"><div class="nav-footer"><div class="nav-footer-center"><div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/M-Fox-Wethington/Sea-Ice-Dataset-Harmonization-Tutorial/edit/main/chapters/05-align-and-pair.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/M-Fox-Wethington/Sea-Ice-Dataset-Harmonization-Tutorial/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></div></div></footer></body></html>
