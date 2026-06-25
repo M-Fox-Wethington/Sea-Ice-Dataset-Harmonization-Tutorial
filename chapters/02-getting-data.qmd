@@ -1,0 +1,74 @@
+# Getting the data from NSIDC {#sec-getting-data}
+
+You need this chapter only when you move beyond the bundled sample to build the real multi-decade dataset. The sample under `data/sample/` already contains post-ingestion clips, so if you are reading straight through you can skim this chapter and pick up the live work again in @sec-ingestion. Nothing here runs during the book build, because it requires credentials and downloads many gigabytes; every command is shown for you to run yourself.
+
+## Which product needs a login
+
+The two products are hosted differently, which affects how you fetch them.
+
+The AMSR product (AU_SI12) is distributed by the NASA National Snow and Ice Data Center Distributed Active Archive Center, and downloading it requires a free NASA Earthdata Login. Register once at <https://urs.earthdata.nasa.gov>. The Sea Ice Index (G02135) is a NOAA-at-NSIDC product and is openly accessible over HTTPS, so it needs no account. The two access patterns below reflect that split.
+
+NSIDC has been migrating its archive to the Earthdata Cloud, so the exact host names change over time. The authoritative download recipe always lives on each product's data page under its "Download Data" tab, and the patterns below are representative rather than guaranteed-current. Confirm the current URLs on the product pages: [AU_SI12](https://nsidc.org/data/au_si12/versions/1) and [G02135](https://nsidc.org/data/g02135).
+
+## Set up Earthdata authentication
+
+The standard way to authenticate a command-line download to NSIDC is a `.netrc` file holding your Earthdata credentials, which `wget` and `curl` read automatically. Create it in your home directory (the file is named `.netrc` on macOS and Linux, and `_netrc` on Windows):
+
+```bash
+echo "machine urs.earthdata.nasa.gov login YOUR_USERNAME password YOUR_PASSWORD" >> ~/.netrc
+chmod 600 ~/.netrc
+```
+
+The `chmod` matters on macOS and Linux, because `wget` refuses to read a `.netrc` that other users can see. On Windows the file permission step is unnecessary.
+
+## Download AMSR (AU_SI12)
+
+Each daily AU_SI12 file is an HDF-EOS5 (`.he5`) granule that contains both polar grids; we read only the southern-hemisphere sea-ice concentration field in @sec-ingestion. The granules are organized into date subdirectories. A recursive `wget` that authenticates through your `.netrc` and keeps the session cookie looks like this:
+
+```bash
+# Representative pattern. Copy the exact base URL from the AU_SI12 data page,
+# which reflects the current Earthdata Cloud host.
+wget --load-cookies ~/.urs_cookies --save-cookies ~/.urs_cookies \
+     --auth-no-challenge=on --keep-session-cookies \
+     --no-check-certificate \
+     --recursive --no-parent --no-directories \
+     --accept "AMSR_U2_L3_SeaIce12km_*.he5" \
+     --directory-prefix data/full/amsr_raw \
+     "https://n5eil01u.ecs.nsidc.org/AMSA/AU_SI12.001/2013.07.01/"
+```
+
+To pull a multi-year span, loop over the date directories, or use the full date-list download script that the data page generates for you once you select a temporal range.
+
+## Download Sea Ice Index (G02135)
+
+We use the southern-hemisphere daily concentration GeoTIFFs, the files named `S_YYYYMMDD_concentration_v3.0.tif`. They sit in a per-year directory tree and need no login:
+
+```bash
+# Representative pattern; confirm the current host on the G02135 data page.
+wget --recursive --no-parent --no-directories \
+     --accept "S_*_concentration_v3.0.tif" \
+     --directory-prefix data/full/nsidc_raw \
+     "https://noaadata.apps.nsidc.org/NOAA/G02135/south/daily/geotiff/2013/"
+```
+
+## A manual fallback
+
+If the scripted download gives you trouble, both products can be fetched by hand. For AMSR, use [Earthdata Search](https://search.earthdata.nasa.gov), search for "AU_SI12", draw your time range and a polygon over the Peninsula, and download the granules. For the Sea Ice Index, the data page's "Download Data" tab links straight into the GeoTIFF directory tree you can browse and click through. Once the files are on disk, the rest of the tutorial treats them the same way regardless of how they arrived.
+
+## How much to download
+
+For the western Antarctic Peninsula example you need only the southern-hemisphere files. The Sea Ice Index daily GeoTIFFs are small, on the order of tens of kilobytes each, so the full 1979 to 2023 record is a few gigabytes. The AMSR granules are larger, because each holds the full hemisphere at 12.5 km in HDF5, so a decade of daily files runs to tens of gigabytes. You can reduce the footprint substantially by clipping to the study area as you ingest, which is what @sec-ingestion does.
+
+## Point the tutorial at your download
+
+Once the raw files are in place and converted (@sec-ingestion), arrange the cleaned daily clips into the same layout the sample uses, an `amsr_12km/` directory and a `nsidc_25km_seaiceindex/` directory, then tell the code to use them:
+
+```r
+Sys.setenv(SIH_MODE = "full")
+Sys.setenv(SIH_DATA_ROOT = "/path/to/your/data/full")
+paths <- sih_paths()
+```
+
+## If you work in Python
+
+NASA maintains [`earthaccess`](https://earthaccess.readthedocs.io), a Python package that handles Earthdata authentication, search, and download in a few lines and is often the smoothest route for the AMSR granules. It is outside this R tutorial, but if Python is already part of your workflow it is worth knowing that you can do the fetch there and bring only the converted GeoTIFFs into R.
